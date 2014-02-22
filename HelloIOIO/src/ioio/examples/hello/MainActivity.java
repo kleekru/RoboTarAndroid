@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import android.util.Log;
 
 /**
  * This is the main activity of the HelloIOIO example application.
@@ -76,7 +77,8 @@ public class MainActivity extends IOIOActivity {
 		songSample = new SongSample();
 		chordManager = new ChordManager();
 		chordManager.initialize();
-		LOG.info("chord manager is initialized?: {}", chordManager.isInitialized());
+		LOG.info("HelloIOIO", "chord manager is initialized?: {}", chordManager.isInitialized());
+		Log.i("HelloIOIO", "chord manager is initialized"+ chordManager.isInitialized());
 		// map chord references with real chords values from chord manager
 		songSample.fillWith(chordManager);
 		
@@ -147,7 +149,8 @@ public class MainActivity extends IOIOActivity {
 	
 	protected void prepareLEDs(LEDSettings leds) {
 		this.leds = leds;
-		LOG.debug("preparing LED Values on songs page: {}", leds.debugOutput());
+		LOG.debug("HelloIOIO", "preparing LED Values on songs page: {}", leds.debugOutput());
+		Log.i("HelloIOIO", "preparing LED Values on songs page: "+ leds.debugOutput());
 	}
 	
 	/**
@@ -181,7 +184,8 @@ public class MainActivity extends IOIOActivity {
 			@Override
 			protected void setup() throws ConnectionLostException,
 					InterruptedException {
-				LOG.info("IOIO is connected");
+				LOG.info("HelloIOIO", "IOIO is connected");
+				Log.i("HelloIOIO", "IOIO is connected");
 				
 				// on-board pin
 				stateLED = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
@@ -210,7 +214,8 @@ public class MainActivity extends IOIOActivity {
 			
 			private void reset() throws ConnectionLostException, InterruptedException {
 				// Set prescaler - see PCA9685 data sheet
-				LOG.info("Start of the BaseIOIOLooper.reset method");
+				LOG.info("HelloIOIO", "Start of the BaseIOIOLooper.reset method");
+				Log.i("HelloIOIO", "Start of the BaseIOIOLooper.reset method");
 				float prescaleval = 25000000;
 				prescaleval /= 4096;
 				prescaleval /= FREQ;
@@ -224,7 +229,8 @@ public class MainActivity extends IOIOActivity {
 			
 			private void write8(byte reg, byte val) throws ConnectionLostException,
 				InterruptedException {
-				LOG.info("Start of the write8 method");
+				LOG.info("HelloIOIO", "Start of the write8 method");
+				Log.i("HelloIOIO", "Start of the write8 method");
 				byte[] request = {reg, val};
 				twi_.writeReadAsync(PCA_ADDRESS, false, request, request.length, null, 0);
 			}
@@ -303,6 +309,8 @@ public class MainActivity extends IOIOActivity {
 				
 				Thread.sleep(10);
 				//C Chord?
+				LOG.info("HelloIOIO", "Pedal is pressed or released");
+				Log.i("HelloIOIO", "Pedal is pressed or released");
 				setServo(0, servoValue);
 				setServo(1, servoValue);
 				setServo(2, servoValue);
@@ -356,15 +364,17 @@ public class MainActivity extends IOIOActivity {
 			 * @throws ConnectionLostException
 			 * @throws InterruptedException
 			 */
-			/*public void resetAll() throws ConnectionLostException, InterruptedException {
+			public void resetAll() throws ConnectionLostException, InterruptedException {
 				stateLedButton.setChecked(false);
 				for (int servo = 0; servo < 12; servo++) {
 					//setServo(servo, servoSettings.getInitial(servo));
 					setServo(servo, 1.0f);
 				}
 				//turnOffFretLEDs();
-				LOG.info("Servos in neutral position default");
-			}*/
+				LOG.info("HelloIOIO","resetAll - Servos in neutral position default");
+				Log.i("HelloIOIO","resetAll - Servos in neutral position default");
+				return;
+			}
 
 			/*private void turnOffFretLEDs() throws ConnectionLostException {
 				for (int i = 0; i < 6; i++) {
@@ -384,7 +394,8 @@ public class MainActivity extends IOIOActivity {
 			 * @throws InterruptedException
 			 */
 			public void setServo(int servoNum, float pos) throws ConnectionLostException, InterruptedException {
-				LOG.debug("setServo call: servo: {}, value: {}", servoNum, pos);
+				LOG.debug("HelloIOIO", "setServo call: servo: {}, value: {}", servoNum, pos);
+				Log.i("HelloIOIO", "setServo call: " + "ServoNum:" + servoNum +"Servo Value: "+ pos);
 				setPulseWidth(servoNum, pos + 1.0f);  //
 			}
 			
@@ -405,6 +416,7 @@ public class MainActivity extends IOIOActivity {
 			 */
 			public void setLED(int stringNum, int fretNum) throws ConnectionLostException {
 				LOG.debug("setLED call: string: {}, fretNum: {}", stringNum, fretNum);
+				Log.i("HelloIOIO", "setLED call: " +"setLED"+ stringNum + "FretNum:"+ fretNum);
 				if (fretNum <= 0) {
 					if (fretLEDsTurnedOn[stringNum] != null) {
 						// if we know what was last turned on
@@ -429,12 +441,14 @@ public class MainActivity extends IOIOActivity {
 			
 			@Override
 			public void disconnected() {
-				LOG.info("IOIO disconnected");
+				LOG.info("HelloIOIO", "IOIO disconnected");
+				Log.i("HelloIOIO", "IOIO disconnected");
 			}
 
 			@Override
 			public void incompatible() {
 				LOG.info("Incompatible firmware version of IOIO");
+				Log.i("HelloIOIO", "Incompatible firmware version of IOIO");
 			}
 		};
 
