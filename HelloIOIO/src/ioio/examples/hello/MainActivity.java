@@ -257,16 +257,17 @@ public class MainActivity extends IOIOActivity {
 				// no change from last time
 				return;
 			}
-			/*
+			
 			if (!pedalInHighPosition) {
-				LOG.info("Pedal is pressed");
-				System.out.println("Pedal is pressed");
+				LOG.info("HelloIOIO", "Pedal is pressed");
+				Log.i("HelloIOIO", "Pedal is pressed");
 				// PEDAL IS PRESSED
 				stateLedButton.setChecked(true);
 
 				// we are checking and logging the status first
 				if (!guiReady) {
-					LOG.error("The GUI is not yet ready!");
+					LOG.error("The GUI is not ready yet!");
+					Log.e("HelloIOIO", "guit is not ready yet!");
 				} else {
 					// if we already play the song, play next chord
 					if (chordIdx == -1) {
@@ -274,14 +275,19 @@ public class MainActivity extends IOIOActivity {
 						prepareNoChord();
 						return;
 					}
-					// sets servo settings and led settings
+					// prepare servo settings and led settings
 					prepareChord(getCurrentChord());
 					
-					// debugging logs... in problems, uncomment
-					System.out.println("got chord: {}" + servoSettings.debugOutput());
-					System.out.println("leds: {}" + leds);
+					// debugging servos and leds values for current chord
+					// if in problems, uncomment and investigate
+					LOG.debug("HelloIOIO", "got chord: {}" + servoSettings.debugOutput());
+					LOG.debug("HelloIOIO", "leds: {}" + leds);
+					Log.d("HelloIOIO", "got chord: " + servoSettings.debugOutput());
+					Log.d("HelloIOIO", "leds: " + leds);
 					
 					long timeStart = System.currentTimeMillis();
+					// send prepared values to RoboTar device
+					// for each string
 					for (int i = 0; i < 6; i++) {
 						int servoNumber = servoSettings.getServos()[i];
 						float servoValue = servoSettings.getValues()[i];
@@ -294,18 +300,17 @@ public class MainActivity extends IOIOActivity {
 						}
 					}
 					long timeEnd = System.currentTimeMillis();
-					LOG.debug("It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
+					LOG.debug("HelloIOIO", "It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
+					Log.d("HelloIOIO", "To execute 6 servos and LEDs took ms: " + (timeEnd - timeStart));
 				}
 			} else {
 				LOG.info("Pedal is released");
 				// PEDAL IS RELEASED
-				// turn off led
-				stateLedButton.setChecked(false);
 				// reset servos
 				resetAll();
-				
+			}	
 			// save current status of the pedal
-			 */
+			/*
 			lastKnownPedalPosition = pedalInHighPosition;
 			
 			float servoValue = 1.3f;
@@ -341,7 +346,7 @@ public class MainActivity extends IOIOActivity {
 			setServo(10, 1.0f);
 			setServo(11, 1.0f);
 			Thread.sleep(300);
-
+			*/
 
 			/*//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
 			for (int c=0; c<16; c++) {
@@ -368,24 +373,33 @@ public class MainActivity extends IOIOActivity {
 		 * @throws InterruptedException
 		 */
 		public void resetAll() throws ConnectionLostException, InterruptedException {
+			// turn off main led
 			stateLedButton.setChecked(false);
+			// set all servos to neutral positions
 			for (int servo = 0; servo < 12; servo++) {
-				//setServo(servo, servoSettings.getInitial(servo));
-				setServo(servo, 1.0f);
+				// initial = 1.0 + corrections
+				setServo(servo, servoSettings.getInitial(servo));
+				// probably not?
+				//setServo(servo, 1.0f);
 			}
-			//turnOffFretLEDs();
+			turnOffFretLEDs();
 			LOG.info("HelloIOIO", "Servos in neutral position default");
 			Log.i("HelloIOIO","resetAll - Servos in neutral position default");
 		}
 
-		/*private void turnOffFretLEDs() throws ConnectionLostException {
+		/**
+		 * Turn off fret LEDs. 
+		 * 
+		 * @throws ConnectionLostException
+		 */
+		private void turnOffFretLEDs() throws ConnectionLostException {
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 4; j++) {
 					fretLEDs[i][j].write(false);
 				}
 				fretLEDsTurnedOn[i] = null;
 			}
-		}*/
+		}
 		
 		/**
 		 * Set Servo channel and milliseconds input to PulseWidth calculation
@@ -401,6 +415,14 @@ public class MainActivity extends IOIOActivity {
 			setPulseWidth(servoNum, pos + 1.0f);  //
 		}
 		
+		/**
+		 * Send data to RoboTar device.
+		 *  
+		 * @param channel
+		 * @param ms
+		 * @throws ConnectionLostException
+		 * @throws InterruptedException
+		 */
 		protected void setPulseWidth(int channel, float ms) throws ConnectionLostException, InterruptedException {
 			// Set pulsewidth according to PCA9685 data sheet based on milliseconds value sent from setServo method
 			// 4096 steps per cycle, frequency is 50MHz (50 steps per millisecond)
