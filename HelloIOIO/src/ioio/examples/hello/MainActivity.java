@@ -296,75 +296,64 @@ public class MainActivity extends IOIOActivity {
 				} 
 
 				// save current status of the pedal
+				 */
 				lastKnownPedalPosition = pedalInHighPosition;
 				
-				/*
-				 //TODO what is this?
-				//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
-				for (int c=0; c<16; c++) {
-					for (float p = 1.5f; p>0.0; p-=0.5f) {
-						Thread.sleep(200);
-						setServo(c, p);
-						led_.write(ledOn_);
-					}
-				
-					for (float p=0.0f; p<1.5f; p+=0.5f) {
-						Thread.sleep(200);
-						setServo(c, p);
-					}
-				}*/
 				
 				Thread.sleep(10);
-				//All Servos one way
-				setServo(0, 0.0f);
-				setServo(1, 0.0f);
-				setServo(2, 0.0f);
-				setServo(3, 0.0f);
-				setServo(4, 0.0f);
-				setServo(5, 0.0f);
-				setServo(6, 0.0f);
-				setServo(7, 0.0f);
-				setServo(8, 0.0f);
-				setServo(9, 0.0f);
-				setServo(10, 0.0f);
-				setServo(11, 0.0f);
-				setServo(12, 0.0f);
-				setServo(13, 0.0f);
-				setServo(14, 0.0f);
-				setServo(15, 0.0f);
-				Thread.sleep(1000);
-				//All Servos back the other way
-				setServo(0, 1.5f);
-				setServo(1, 1.5f);
-				setServo(2, 1.5f);
-				setServo(3, 1.5f);
-				setServo(4, 1.5f);
-				setServo(5, 1.5f);
-				setServo(6, 1.5f);
-				setServo(7, 1.5f);
-				setServo(8, 1.5f);
-				setServo(9, 1.5f);
-				setServo(10, 1.5f);
-				setServo(11, 1.5f);
-				setServo(12, 1.5f);
-				setServo(13, 1.5f);
-				setServo(14, 1.5f);
-				setServo(15, 1.5f);
-				Thread.sleep(1000);
+				//C Chord?
+				setServo(0, 1.0f);
+				setServo(1, 1.0f);
+				setServo(2, 1.0f);
+				setServo(3, 1.3f);
+				setServo(4, 0.7f);
+				setServo(5, 1.0f);
+				setServo(6, 1.0f);
+				setServo(7, 1.0f);
+				setServo(8, 1.3f);
+				setServo(9, 1.0f);
+				setServo(10, 1.0f);
+				setServo(11, 1.0f);
+				setServo(12, 1.0f);
+				setServo(13, 1.0f);
+				setServo(14, 1.0f);
+				setServo(15, 1.0f);
+				Thread.sleep(300);
+				//G Chord?
+				setServo(0, 1.3f);
+				setServo(1, 1.0f);
+				setServo(2, 1.0f);
+				setServo(3, 0.7f);
+				setServo(4, 1.0f);
+				setServo(5, 1.0f);
+				setServo(6, 1.0f);
+				setServo(7, 1.0f);
+				setServo(8, 1.0f);
+				setServo(9, 1.0f);
+				setServo(10, 1.0f);
+				setServo(11, 1.0f);
+				setServo(12, 1.0f);
+				setServo(13, 1.0f);
+				setServo(14, 1.0f);
+				setServo(15, 1.0f);
+				Thread.sleep(300);
 
-				//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
+				/*//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
 				for (int c=0; c<16; c++) {
-					for (float p = 1.5f; p>0.0; p-=0.1f) {
+					for (float p = 1.0f; p>0.7; p-=0.1f) {
 						Thread.sleep(200);
 						setServo(c, p);
 						stateLED.write(ledOn_);
 					}
 
-					for (float p=0.0f; p<1.5f; p+=0.1f) {
+					for (float p=1.0f; p<1.3f; p+=0.1f) {
 						Thread.sleep(200);
 						setServo(c, p);
 					}
-				}
+				}*/
+				
+				resetAll();
+				
 			}
 			
 			/**
