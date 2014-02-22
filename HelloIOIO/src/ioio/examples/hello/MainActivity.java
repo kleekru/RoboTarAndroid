@@ -299,31 +299,28 @@ public class MainActivity extends IOIOActivity {
 				 */
 				lastKnownPedalPosition = pedalInHighPosition;
 				
+				float servoValue = 1.3f;
 				
 				Thread.sleep(10);
 				//C Chord?
+				setServo(0, servoValue);
+				setServo(1, servoValue);
+				setServo(2, servoValue);
+				setServo(3, servoValue);
+				setServo(4, servoValue);
+				setServo(5, servoValue);
+				setServo(6, servoValue);
+				setServo(7, servoValue);
+				setServo(8, servoValue);
+				setServo(9, servoValue);
+				setServo(10, servoValue);
+				setServo(11, servoValue);			
+				Thread.sleep(300);
+
 				setServo(0, 1.0f);
 				setServo(1, 1.0f);
 				setServo(2, 1.0f);
-				setServo(3, 1.3f);
-				setServo(4, 0.7f);
-				setServo(5, 1.0f);
-				setServo(6, 1.0f);
-				setServo(7, 1.0f);
-				setServo(8, 1.3f);
-				setServo(9, 1.0f);
-				setServo(10, 1.0f);
-				setServo(11, 1.0f);
-				setServo(12, 1.0f);
-				setServo(13, 1.0f);
-				setServo(14, 1.0f);
-				setServo(15, 1.0f);
-				Thread.sleep(300);
-				//G Chord?
-				setServo(0, 1.3f);
-				setServo(1, 1.0f);
-				setServo(2, 1.0f);
-				setServo(3, 0.7f);
+				setServo(3, 1.0f);
 				setServo(4, 1.0f);
 				setServo(5, 1.0f);
 				setServo(6, 1.0f);
@@ -332,11 +329,8 @@ public class MainActivity extends IOIOActivity {
 				setServo(9, 1.0f);
 				setServo(10, 1.0f);
 				setServo(11, 1.0f);
-				setServo(12, 1.0f);
-				setServo(13, 1.0f);
-				setServo(14, 1.0f);
-				setServo(15, 1.0f);
 				Thread.sleep(300);
+
 
 				/*//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
 				for (int c=0; c<16; c++) {
@@ -352,7 +346,7 @@ public class MainActivity extends IOIOActivity {
 					}
 				}*/
 				
-				resetAll();
+				//resetAll();
 				
 			}
 			
@@ -362,23 +356,24 @@ public class MainActivity extends IOIOActivity {
 			 * @throws ConnectionLostException
 			 * @throws InterruptedException
 			 */
-			public void resetAll() throws ConnectionLostException, InterruptedException {
+			/*public void resetAll() throws ConnectionLostException, InterruptedException {
 				stateLedButton.setChecked(false);
 				for (int servo = 0; servo < 12; servo++) {
-					setServo(servo, servoSettings.getInitial(servo));
+					//setServo(servo, servoSettings.getInitial(servo));
+					setServo(servo, 1.0f);
 				}
-				turnOffFretLEDs();
+				//turnOffFretLEDs();
 				LOG.info("Servos in neutral position default");
-			}
+			}*/
 
-			private void turnOffFretLEDs() throws ConnectionLostException {
+			/*private void turnOffFretLEDs() throws ConnectionLostException {
 				for (int i = 0; i < 6; i++) {
 					for (int j = 0; j < 4; j++) {
 						fretLEDs[i][j].write(false);
 					}
 					fretLEDsTurnedOn[i] = null;
 				}
-			}
+			}*/
 			
 			/**
 			 * Set Servo channel and milliseconds input to PulseWidth calculation
