@@ -45,6 +45,10 @@ public class MainActivity extends IOIOActivity {
 	private SongSample songSample;
 	private ChordManager chordManager;
 	private boolean guiReady;
+	private ToggleButton button_;
+	
+	protected boolean ledOn_;
+
 	
 	/**
 	 * ServoSettings for the current chord. 
@@ -181,7 +185,7 @@ public class MainActivity extends IOIOActivity {
 				
 				// on-board pin
 				stateLED = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
-
+								
 				// pedal input setup
 				pedalButton = ioio_.openDigitalInput(Pins.PEDAL_PIN, DigitalInput.Spec.Mode.PULL_UP);
 				
@@ -228,6 +232,7 @@ public class MainActivity extends IOIOActivity {
 			@Override
 			public void loop() throws ConnectionLostException,
 					InterruptedException {
+				
 				//LOG.info("Start of the loop method");
 				stateLED.write(!stateLedButton.isChecked());
 
@@ -241,7 +246,7 @@ public class MainActivity extends IOIOActivity {
 					// no change from last time
 					return;
 				}
-				
+				/*
 				if (!pedalInHighPosition) {
 					LOG.info("Pedal is pressed");
 					System.out.println("Pedal is pressed");
@@ -309,6 +314,57 @@ public class MainActivity extends IOIOActivity {
 					}
 				}*/
 				
+				Thread.sleep(10);
+				//All Servos one way
+				setServo(0, 0.0f);
+				setServo(1, 0.0f);
+				setServo(2, 0.0f);
+				setServo(3, 0.0f);
+				setServo(4, 0.0f);
+				setServo(5, 0.0f);
+				setServo(6, 0.0f);
+				setServo(7, 0.0f);
+				setServo(8, 0.0f);
+				setServo(9, 0.0f);
+				setServo(10, 0.0f);
+				setServo(11, 0.0f);
+				setServo(12, 0.0f);
+				setServo(13, 0.0f);
+				setServo(14, 0.0f);
+				setServo(15, 0.0f);
+				Thread.sleep(1000);
+				//All Servos back the other way
+				setServo(0, 1.5f);
+				setServo(1, 1.5f);
+				setServo(2, 1.5f);
+				setServo(3, 1.5f);
+				setServo(4, 1.5f);
+				setServo(5, 1.5f);
+				setServo(6, 1.5f);
+				setServo(7, 1.5f);
+				setServo(8, 1.5f);
+				setServo(9, 1.5f);
+				setServo(10, 1.5f);
+				setServo(11, 1.5f);
+				setServo(12, 1.5f);
+				setServo(13, 1.5f);
+				setServo(14, 1.5f);
+				setServo(15, 1.5f);
+				Thread.sleep(1000);
+
+				//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
+				for (int c=0; c<16; c++) {
+					for (float p = 1.5f; p>0.0; p-=0.1f) {
+						Thread.sleep(200);
+						setServo(c, p);
+						stateLED.write(ledOn_);
+					}
+
+					for (float p=0.0f; p<1.5f; p+=0.1f) {
+						Thread.sleep(200);
+						setServo(c, p);
+					}
+				}
 			}
 			
 			/**
