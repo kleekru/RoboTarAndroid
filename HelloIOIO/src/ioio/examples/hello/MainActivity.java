@@ -82,6 +82,9 @@ public class MainActivity extends IOIOActivity {
 		// map chord references with real chords values from chord manager
 		songSample.fillWith(chordManager);
 		
+		// load corrections for servo - TODO - later from file.
+		servoSettings = ServoSettings.loadCorrectionsOnAndroid();
+		
 		// display sample line
 		sampleLineText.setText(songSample.getSong().getLine(0).getText());
 		currentChordView.setText("---");
