@@ -296,7 +296,8 @@ public class MainActivity extends IOIOActivity {
 						float servoValue = servoSettings.getValues()[i];
 						setServo(servoNumber, servoValue);
 						if (leds != null) {
-							LOG.debug("leds 2: {}", leds.getLeds());
+							LOG.debug("HelloIOIO", "leds 2: {}", leds.getLeds());
+							Log.d("HelloIOIO", "leds 2:" + leds.getLeds());
 							if (leds.getLeds() != null) {
 								setLED(i, leds.getLeds()[i]);
 							}
