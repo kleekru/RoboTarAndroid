@@ -42,25 +42,25 @@ public class MainActivity extends IOIOActivity {
 	private Button simPedalButton;
 	private TextView currentChordView;
 	private int chordIdx;
-	
+
 	private SongSample songSample;
 	private ChordManager chordManager;
 	private boolean guiReady;
 	private ToggleButton button_;
-	
+
 	protected boolean ledOn_;
 
-	
+
 	/**
 	 * ServoSettings for the current chord. 
 	 */
 	private ServoSettings servoSettings;
-	
+
 	/**
 	 * LED settings for the current chord.
 	 */
 	private LEDSettings leds;
-	
+
 	/**
 	 * Called when the activity is first created. Here we normally initialize
 	 * our GUI.
@@ -81,14 +81,16 @@ public class MainActivity extends IOIOActivity {
 		Log.i("HelloIOIO", "chord manager is initialized"+ chordManager.isInitialized());
 		// map chord references with real chords values from chord manager
 		songSample.fillWith(chordManager);
-		
+
 		// load corrections for servo - TODO - later from file.
-		servoSettings = ServoSettings.loadCorrectionsOnAndroid();
+		//servoSettings = ServoSettings.loadCorrectionsOnAndroid();
+
+		servoSettings = new ServoSettings();
 		
 		// display sample line
 		sampleLineText.setText(songSample.getSong().getLine(0).getText());
 		currentChordView.setText("---");
-		
+
 		guiReady = true;
 	}
 
@@ -110,10 +112,11 @@ public class MainActivity extends IOIOActivity {
 	 * Release servos and turn off LEDs.
 	 */
 	public void prepareNoChord() {
+		Log.i("HelloIOIO", "In prepareNoChord");
 		servoSettings.setInitialPosition();
 		prepareLEDs(new LEDSettings());
 	}
-	
+
 	/**
 	 * Set values of LEDs structures.
 	 * 
@@ -124,7 +127,7 @@ public class MainActivity extends IOIOActivity {
 		LOG.debug("HelloIOIO", "preparing LED Values on songs page: {}", leds.debugOutput());
 		Log.i("HelloIOIO", "preparing LED Values on songs page: "+ leds.debugOutput());
 	}
-	
+
 	/**
 	 * This is the thread on which all the IOIO activity happens. It will be run
 	 * every time the application is resumed and aborted when it is paused. The
@@ -148,9 +151,9 @@ public class MainActivity extends IOIOActivity {
 		private DigitalOutput[][] fretLEDs = new DigitalOutput[6][4];
 		/** reference to currently turned on LEDs, to be able to turn them off */
 		private DigitalOutput[] fretLEDsTurnedOn = new DigitalOutput[6];
-		
+
 		private boolean lastKnownPedalPosition = true;
-		
+
 		/**
 		 * Called every time a connection with IOIO has been established.
 		 * Typically used to open pins.
@@ -162,22 +165,22 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		protected void setup() throws ConnectionLostException,
-				InterruptedException {
+		InterruptedException {
 			LOG.info("HelloIOIO", "IOIO is connected");
 			Log.i("HelloIOIO", "IOIO is connected");
-			
+
 			// on-board pin
-			stateLED = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
-							
+			//stateLED = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
+
 			// pedal input setup
 			pedalButton = ioio_.openDigitalInput(Pins.PEDAL_PIN, DigitalInput.Spec.Mode.PULL_UP);
-			
+
 			// fret leds output setup
 			fretLEDs = prepareLEDs(false);
-			
+
 			// Setup IOIO TWI Pins
 			twi_ = ioio_.openTwiMaster(I2C_PAIR, TwiMaster.Rate.RATE_1MHz, false);
-			
+
 			reset();
 		}
 
@@ -197,7 +200,7 @@ public class MainActivity extends IOIOActivity {
 			}
 			return fretLEDs;
 		}
-		
+
 		/** 
 		 * Initialize RoboTar IOIO device.
 		 * 
@@ -213,12 +216,12 @@ public class MainActivity extends IOIOActivity {
 			prescaleval /= FREQ;
 			prescaleval -= 1;
 			byte prescale = (byte) Math.floor(prescaleval + 0.5);
-			
+
 			write8(PCA9685_MODE1, (byte) 0x10); // go to sleep... prerequisite to set prescaler
 			write8(PCA9685_PRESCALE, prescale); // set the prescaler
 			write8(PCA9685_MODE1, (byte) 0x20); // Wake up and set Auto Increment
 		}
-		
+
 		/**
 		 * Send data to RoboTar device.
 		 * 
@@ -228,7 +231,7 @@ public class MainActivity extends IOIOActivity {
 		 * @throws InterruptedException
 		 */
 		private void write8(byte reg, byte val) throws ConnectionLostException,
-			InterruptedException {
+		InterruptedException {
 			LOG.info("HelloIOIO", "Start of the write8 method");
 			Log.i("HelloIOIO", "Start of the write8 method");
 			byte[] request = {reg, val};
@@ -245,80 +248,105 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		public void loop() throws ConnectionLostException,
-				InterruptedException {
-			
+		InterruptedException {
+
 			//LOG.info("Start of the loop method");
-			stateLED.write(!stateLedButton.isChecked());
+			//stateLED.write(!stateLedButton.isChecked());
 
 			// initial position
 			// high = true, low = false
 			boolean pedalInHighPosition = pedalButton.read();
 			//LOG.debug("current position of pedal is: {}", pedalInHighPosition);
 
+
 			//LOG.debug("lastPedalPosition: {}", lastKnownPedalPosition);
 			if (lastKnownPedalPosition == pedalInHighPosition) {
 				// no change from last time
 				return;
 			}
-			
-			if (!pedalInHighPosition) {
-				LOG.info("HelloIOIO", "Pedal is pressed");
-				Log.i("HelloIOIO", "Pedal is pressed");
-				// PEDAL IS PRESSED
-				stateLedButton.setChecked(true);
+			// save current status of the pedal
+			lastKnownPedalPosition = pedalInHighPosition;
 
-				// we are checking and logging the status first
-				if (!guiReady) {
-					LOG.error("The GUI is not ready yet!");
-					Log.e("HelloIOIO", "guit is not ready yet!");
-				} else {
-					// if we already play the song, play next chord
-					if (chordIdx == -1) {
-						// no chord selected - we are not playing the song, quit
-						prepareNoChord();
-						return;
+
+			if (!pedalInHighPosition) {
+				LOG.info("HelloIOIO", "Pedal is pressed 2");
+				Log.i("HelloIOIO", "Pedal is pressed 2");
+				// PEDAL IS PRESSED
+				//stateLedButton.setChecked(true);
+
+				//workingKevinsMethod();
+				
+		// we are checking and logging the status first
+		if (!guiReady) {
+			LOG.error("The GUI is not ready yet!");
+			Log.e("HelloIOIO", "guit is not ready yet!");
+		} else {
+			// if we already play the song, play next chord
+			if (chordIdx == -1) {
+				// no chord selected - we are not playing the song, quit
+				prepareNoChord();
+				return;
+			}
+			// prepare servo settings and led settings
+			prepareChord(getCurrentChord());
+
+			// debugging servos and leds values for current chord
+			// if in problems, uncomment and investigate
+			LOG.debug("HelloIOIO", "got chord: {}" + servoSettings.debugOutput());
+			LOG.debug("HelloIOIO", "leds: {}" + leds);
+			Log.d("HelloIOIO", "got chord: " + servoSettings.debugOutput());
+			Log.d("HelloIOIO", "leds: " + leds);
+
+			long timeStart = System.currentTimeMillis();
+			// send prepared values to RoboTar device
+			// for each string
+			for (int i = 0; i < 6; i++) {
+				int servoNumber = servoSettings.getServos()[i];
+				float servoValue = servoSettings.getValues()[i];
+				setServo(servoNumber, servoValue);
+				if (leds != null) {
+					LOG.debug("HelloIOIO", "leds 2: {}", leds.getLeds());
+					Log.d("HelloIOIO", "leds 2:" + leds.getLeds());
+					if (leds.getLeds() != null) {
+						setLED(i, leds.getLeds()[i]);
 					}
-					// prepare servo settings and led settings
-					prepareChord(getCurrentChord());
-					
-					// debugging servos and leds values for current chord
-					// if in problems, uncomment and investigate
-					LOG.debug("HelloIOIO", "got chord: {}" + servoSettings.debugOutput());
-					LOG.debug("HelloIOIO", "leds: {}" + leds);
-					Log.d("HelloIOIO", "got chord: " + servoSettings.debugOutput());
-					Log.d("HelloIOIO", "leds: " + leds);
-					
-					long timeStart = System.currentTimeMillis();
-					// send prepared values to RoboTar device
-					// for each string
-					for (int i = 0; i < 6; i++) {
-						int servoNumber = servoSettings.getServos()[i];
-						float servoValue = servoSettings.getValues()[i];
-						setServo(servoNumber, servoValue);
-						if (leds != null) {
-							LOG.debug("HelloIOIO", "leds 2: {}", leds.getLeds());
-							Log.d("HelloIOIO", "leds 2:" + leds.getLeds());
-							if (leds.getLeds() != null) {
-								setLED(i, leds.getLeds()[i]);
-							}
-						}
-					}
-					long timeEnd = System.currentTimeMillis();
-					LOG.debug("HelloIOIO", "It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
-					Log.d("HelloIOIO", "To execute 6 servos and LEDs took ms: " + (timeEnd - timeStart));
 				}
-			} else {
-				LOG.info("Pedal is released");
+			}
+			long timeEnd = System.currentTimeMillis();
+			LOG.debug("HelloIOIO", "It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
+			Log.d("HelloIOIO", "To execute 6 servos and LEDs took ms: " + (timeEnd - timeStart));
+				}
+				 
+			} 
+			else {
+				LOG.info("HelloIOIO", "Pedal is released 2");
+				Log.i("HelloIOIO", "Pedal is released 2");
 				// PEDAL IS RELEASED
 				// reset servos
 				resetAll();
-			}	
-			// save current status of the pedal
-			/*
-			lastKnownPedalPosition = pedalInHighPosition;
-			
+			}
+
+			//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
+	/*for (int c=0; c<16; c++) {
+		for (float p = 1.0f; p>0.7; p-=0.1f) {
+			Thread.sleep(200);
+			setServo(c, p);
+			stateLED.write(ledOn_);
+		}
+
+		for (float p=1.0f; p<1.3f; p+=0.1f) {
+			Thread.sleep(200);
+			setServo(c, p);
+			}
+		}*/
+
+			//resetAll();
+
+		}
+
+		/*private void workingKevinsMethod() throws InterruptedException, ConnectionLostException {
 			float servoValue = 1.3f;
-			
+
 			Thread.sleep(10);
 			//C Chord?
 			LOG.info("HelloIOIO", "Pedal is pressed or released");
@@ -350,26 +378,11 @@ public class MainActivity extends IOIOActivity {
 			setServo(10, 1.0f);
 			setServo(11, 1.0f);
 			Thread.sleep(300);
-			*/
 
-			/*//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
-			for (int c=0; c<16; c++) {
-				for (float p = 1.0f; p>0.7; p-=0.1f) {
-					Thread.sleep(200);
-					setServo(c, p);
-					stateLED.write(ledOn_);
-				}
-
-				for (float p=1.0f; p<1.3f; p+=0.1f) {
-					Thread.sleep(200);
-					setServo(c, p);
-				}
-			}*/
-			
-			//resetAll();
-			
 		}
-		
+
+
+
 		/**
 		 * Reset all servos to neutral position.
 		 * 
@@ -378,10 +391,12 @@ public class MainActivity extends IOIOActivity {
 		 */
 		public void resetAll() throws ConnectionLostException, InterruptedException {
 			// turn off main led
-			stateLedButton.setChecked(false);
+			//stateLedButton.setChecked(false);
 			// set all servos to neutral positions
 			for (int servo = 0; servo < 12; servo++) {
 				// initial = 1.0 + corrections
+				Log.i("HelloIOIO","Servo Value: "+servo);
+				Log.i("HelloIOIO","servoSettings: "+ servoSettings.getInitial(servo));
 				setServo(servo, servoSettings.getInitial(servo));
 				// probably not?
 				//setServo(servo, 1.0f);
@@ -404,7 +419,7 @@ public class MainActivity extends IOIOActivity {
 				fretLEDsTurnedOn[i] = null;
 			}
 		}
-		
+
 		/**
 		 * Set Servo channel and milliseconds input to PulseWidth calculation
 		 * 
@@ -418,7 +433,7 @@ public class MainActivity extends IOIOActivity {
 			Log.i("HelloIOIO", "setServo call: " + "ServoNum:" + servoNum +"Servo Value: "+ pos);
 			setPulseWidth(servoNum, pos + 1.0f);  //
 		}
-		
+
 		/**
 		 * Send data to RoboTar device.
 		 *  
@@ -502,7 +517,7 @@ public class MainActivity extends IOIOActivity {
 		}
 		return null;
 	}
-	
+
 
 	/**
 	 * A method to create our IOIO thread.
@@ -514,7 +529,7 @@ public class MainActivity extends IOIOActivity {
 	protected IOIOLooper createIOIOLooper() {
 		return new Looper();
 	}
-	
+
 	/**
 	 * this should play the song through test button in gui.
 	 * the logic through Kevin's pedal is above in loop() 
