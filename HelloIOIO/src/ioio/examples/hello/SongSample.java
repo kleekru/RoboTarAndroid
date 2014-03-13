@@ -27,17 +27,23 @@ public class SongSample {
 		song.setInterpret("sample song interpret");
 
 		// chords ref
-		ChordRef firstRef = new ChordRef("robotar-C", 1);
-		ChordRef secondRef = new ChordRef("robotar-G", 16);
-		ChordRef thirdRef = new ChordRef("robotar-C", 26);
+		ChordRef firstRef = new ChordRef("robotar-E7", 1);
+		ChordRef secondRef = new ChordRef("robotar-A7", 16);
+		ChordRef thirdRef = new ChordRef("robotar-E7", 26);
+		ChordRef forthRef = new ChordRef("robotar-B7", 26);
+		ChordRef fifthRef = new ChordRef("robotar-A7", 26);
+		ChordRef sixthRef = new ChordRef("robotar-E7", 26);
 		List<ChordRef> chordsRef = new ArrayList<ChordRef>();
 		chordsRef.add(firstRef);
 		chordsRef.add(secondRef);
 		chordsRef.add(thirdRef);
+		chordsRef.add(forthRef);
+		chordsRef.add(fifthRef);
+		chordsRef.add(sixthRef);
 		
 		// line text
 		Line line = new Line();
-		line.setText("This is sample song line text");
+		line.setText("Blues in E");
 		line.setChords(chordsRef);
 
 		// verse
