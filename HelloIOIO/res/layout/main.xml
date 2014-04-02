@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
+    android:orientation="vertical" >
 
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    android:id="@+id/title"/>
+    <ToggleButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="64dip"
+        android:text="@string/toggleButton"
+        android:visibility="gone" />
 
-<ToggleButton android:text="ToggleButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/button"></ToggleButton>
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/songTitle"
+        android:typeface="normal" />
 
-<Button
-    android:id="@+id/buttonSimPedal"
-    android:layout_width="216dp"
-    android:layout_height="139dp"
-    android:onClick="onClick"
-    android:text="SimPedal" />
+    <TextView
+        android:id="@+id/currentChordView"
+        android:layout_width="107dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="@string/emptyChord"
+        android:textSize="40sp" />
 
-<TextView
-    android:id="@+id/currentLineView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10" >
+    <TextView
+        android:id="@+id/currentLineView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.93"
+        android:ems="10"
+        android:paddingLeft="20dp"
+        android:typeface="monospace" >
 
-</TextView>
+    </TextView>
 
-<TextView
-    android:id="@+id/currentChordView"
-    android:textSize="40sp"
-    android:text="---" 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/buttonSimPedal"
+        android:layout_width="216dp"
+        android:layout_height="102dp"
+        android:onClick="onClick"
+        android:text="@string/simPedal" />
 
-</LinearLayout>
+</TableLayout>

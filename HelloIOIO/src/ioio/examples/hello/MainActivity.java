@@ -1,5 +1,7 @@
 package ioio.examples.hello;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,11 +10,16 @@ import com.robotar.ioio.Pins;
 import com.robotar.ioio.ServoSettings;
 
 import cz.versarius.xchords.Chord;
+import cz.versarius.xchords.ChordBag;
+import cz.versarius.xchords.ChordLibrary;
 import cz.versarius.xchords.ChordManager;
+import cz.versarius.xsong.ChordRef;
 import cz.versarius.xsong.Line;
+import cz.versarius.xsong.Part;
+import cz.versarius.xsong.Song;
+import cz.versarius.xsong.XMLSongLoader;
 import ioio.lib.api.DigitalInput;
 import ioio.lib.api.DigitalOutput;
-import ioio.lib.api.IOIO;
 import ioio.lib.api.TwiMaster;
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
@@ -20,11 +27,11 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 import ioio.examples.hello.R;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.util.Log;
 
 /**
  * This is the main activity of the HelloIOIO example application.
@@ -38,19 +45,24 @@ public class MainActivity extends IOIOActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
 	private ToggleButton stateLedButton;
-	private TextView sampleLineText;
-	private Button simPedalButton;
+	private TextView title;
 	private TextView currentChordView;
-	private int chordIdx;
-
-	private SongSample songSample;
+	private TextView songText;
+	private Button simPedalButton;
+	
+	private Song song;
 	private ChordManager chordManager;
 	private boolean guiReady;
 	private ToggleButton button_;
 
+	private int lineIdx;
+	private int chordIdx;
+
 	protected boolean ledOn_;
 
-
+	//private String rootFolder = "/sdcard/";
+	private String robotarFolder = "rtsongs/";
+	
 	/**
 	 * ServoSettings for the current chord. 
 	 */
@@ -61,6 +73,7 @@ public class MainActivity extends IOIOActivity {
 	 */
 	private LEDSettings leds;
 
+
 	/**
 	 * Called when the activity is first created. Here we normally initialize
 	 * our GUI.
@@ -70,30 +83,136 @@ public class MainActivity extends IOIOActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		stateLedButton = (ToggleButton) findViewById(R.id.button);
-		sampleLineText = (TextView) findViewById(R.id.currentLineView);
-		simPedalButton = (Button) findViewById(R.id.buttonSimPedal);
 		currentChordView = (TextView) findViewById(R.id.currentChordView);
+		title = (TextView) findViewById(R.id.title);
+		songText = (TextView) findViewById(R.id.currentLineView);
+		simPedalButton = (Button) findViewById(R.id.buttonSimPedal);
 		chordIdx = -1;
-		songSample = new SongSample();
+		lineIdx = 0;
 		chordManager = new ChordManager();
 		chordManager.initialize();
 		LOG.info("HelloIOIO", "chord manager is initialized?: {}", chordManager.isInitialized());
-		Log.i("HelloIOIO", "chord manager is initialized"+ chordManager.isInitialized());
-		// map chord references with real chords values from chord manager
-		songSample.fillWith(chordManager);
+		
+		// check external media (sdcard) TODO - full status
+		boolean storageReadable = isExternalStorageReadable();
+		boolean storageWritable = isExternalStorageWritable();
+		if (!storageReadable || !storageWritable) {
+			LOG.error("robotar", "cannot access storage - sdcard, readable:" + storageReadable + ", writable: " + storageWritable);
+			songText.setText("problem with storage, check log");
+			return;
+		} 
+		
+		// get or create robotar storage dir 
+		File rtFolder = getRobotarStorageDir(robotarFolder);
+		if (!rtFolder.isDirectory()) {
+			songText.setText("cannot create folder2");
+			return;
+		}
+		
+		// test load of default song
+		String defaultSongName = "Kev Blues.xml";
+		XMLSongLoader songLoader = new XMLSongLoader();
+		song = songLoader.loadSong(new File(rtFolder, defaultSongName));
+		title.setText(song.getFullTitle());
+		LOG.info("song title: {}", song.getFullTitle());
+		
+		// display the song
+		songText.setText(getSongText(song));
+		
+		// map chord references with real chords values, add chords to chord manager
+		fillWith(song, chordManager);
 
-		// load corrections for servo - TODO - later from file.
+		// load corrections for servo - TODO - later from file. (/assets)
 		//servoSettings = ServoSettings.loadCorrectionsOnAndroid();
-
 		servoSettings = new ServoSettings();
 		
-		// display sample line
-		sampleLineText.setText(songSample.getSong().getLine(0).getText());
+		// display current chord view
 		currentChordView.setText("---");
 
 		guiReady = true;
 	}
 
+	private CharSequence getSongText(Song song2) {
+		StringBuilder sb = new StringBuilder(30);
+		for (Part part : song2.getParts()) {
+			// check empty lines
+			for (Line line : part.getLines()) {
+				if (!line.hasAnyChords()) {
+					if (line.getText() == null) {
+						// totally empty line
+						continue;
+					}
+				} else {
+					// put chords above the text
+					sb.append(formatChords(line));
+				}
+				sb.append(line.getText());
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Will position chords to the proper places.
+	 * first position is 1, not 0!
+	 * 
+	 * @param line
+	 * @return
+	 */
+	private String formatChords(Line line) {
+		StringBuilder sb = new StringBuilder();
+		for (ChordRef ref : line.getChords()) {
+			int end = sb.length() + 1;
+			int position = ref.getPosition();
+			if (end < position) {
+				for (int i = 0; i< position-end; i++) {
+					sb.append(" ");
+				}
+			}
+			String chordName = Chord.getChordName(ref.getChordId());
+			
+			sb.append(chordName);	
+		}
+		
+		if (line.getText() == null) {
+			line.setText(" ");
+		}
+		
+		sb.append("\n");
+		return sb.toString();
+	}
+	
+	/* Checks if external storage is available for read and write */
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+
+	/* Checks if external storage is available to at least read */
+	public boolean isExternalStorageReadable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state) ||
+	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	public File getRobotarStorageDir(String robotarFolder) {
+	    // Get the directory for the user's public documents directory.
+		// this required api level 19, therefore we put our robotarfolder only at the root 
+	    // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS
+		File file = new File(Environment.getExternalStorageDirectory(), robotarFolder);
+	    if (!file.mkdirs()) {
+	        LOG.error("Directory not created");
+	    }
+	    return file;
+	}
+	
 	/**
 	 * Sets servos and LEDs to values according to given chord structure.
 	 * 
@@ -112,7 +231,7 @@ public class MainActivity extends IOIOActivity {
 	 * Release servos and turn off LEDs.
 	 */
 	public void prepareNoChord() {
-		Log.i("HelloIOIO", "In prepareNoChord");
+		LOG.info("In prepareNoChord");
 		servoSettings.setInitialPosition();
 		prepareLEDs(new LEDSettings());
 	}
@@ -124,8 +243,7 @@ public class MainActivity extends IOIOActivity {
 	 */
 	protected void prepareLEDs(LEDSettings leds) {
 		this.leds = leds;
-		LOG.debug("HelloIOIO", "preparing LED Values on songs page: {}", leds.debugOutput());
-		Log.i("HelloIOIO", "preparing LED Values on songs page: "+ leds.debugOutput());
+		LOG.debug("preparing LED Values on songs page: {}", leds.debugOutput());
 	}
 
 	/**
@@ -167,7 +285,6 @@ public class MainActivity extends IOIOActivity {
 		protected void setup() throws ConnectionLostException,
 		InterruptedException {
 			LOG.info("HelloIOIO", "IOIO is connected");
-			Log.i("HelloIOIO", "IOIO is connected");
 
 			// on-board pin
 			//stateLED = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
@@ -210,7 +327,6 @@ public class MainActivity extends IOIOActivity {
 		private void reset() throws ConnectionLostException, InterruptedException {
 			// Set prescaler - see PCA9685 data sheet
 			LOG.info("HelloIOIO", "Start of the BaseIOIOLooper.reset method");
-			Log.i("HelloIOIO", "Start of the BaseIOIOLooper.reset method");
 			float prescaleval = 25000000;
 			prescaleval /= 4096;
 			prescaleval /= FREQ;
@@ -233,7 +349,6 @@ public class MainActivity extends IOIOActivity {
 		private void write8(byte reg, byte val) throws ConnectionLostException,
 		InterruptedException {
 			LOG.info("HelloIOIO", "Start of the write8 method");
-			Log.i("HelloIOIO", "Start of the write8 method");
 			byte[] request = {reg, val};
 			twi_.writeReadAsync(PCA_ADDRESS, false, request, request.length, null, 0);
 		}
@@ -270,7 +385,6 @@ public class MainActivity extends IOIOActivity {
 
 			if (!pedalInHighPosition) {
 				LOG.info("HelloIOIO", "Pedal is pressed 2");
-				Log.i("HelloIOIO", "Pedal is pressed 2");
 				// PEDAL IS PRESSED
 				//stateLedButton.setChecked(true);
 
@@ -279,7 +393,6 @@ public class MainActivity extends IOIOActivity {
 		// we are checking and logging the status first
 		if (!guiReady) {
 			LOG.error("The GUI is not ready yet!");
-			Log.e("HelloIOIO", "guit is not ready yet!");
 		} else {
 			// if we already play the song, play next chord
 			if (chordIdx == -1) {
@@ -292,10 +405,8 @@ public class MainActivity extends IOIOActivity {
 
 			// debugging servos and leds values for current chord
 			// if in problems, uncomment and investigate
-			LOG.debug("HelloIOIO", "got chord: {}" + servoSettings.debugOutput());
-			LOG.debug("HelloIOIO", "leds: {}" + leds);
-			Log.d("HelloIOIO", "got chord: " + servoSettings.debugOutput());
-			Log.d("HelloIOIO", "leds: " + leds);
+			LOG.debug("got chord: {}" + servoSettings.debugOutput());
+			LOG.debug("leds: {}" + leds);
 
 			long timeStart = System.currentTimeMillis();
 			// send prepared values to RoboTar device
@@ -305,22 +416,19 @@ public class MainActivity extends IOIOActivity {
 				float servoValue = servoSettings.getValues()[i];
 				setServo(servoNumber, servoValue);
 				if (leds != null) {
-					LOG.debug("HelloIOIO", "leds 2: {}", leds.getLeds());
-					Log.d("HelloIOIO", "leds 2:" + leds.getLeds());
+					LOG.debug("leds 2: {}", leds.getLeds());
 					if (leds.getLeds() != null) {
 						setLED(i, leds.getLeds()[i]);
 					}
 				}
 			}
 			long timeEnd = System.currentTimeMillis();
-			LOG.debug("HelloIOIO", "It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
-			Log.d("HelloIOIO", "To execute 6 servos and LEDs took ms: " + (timeEnd - timeStart));
+			LOG.debug("It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
 				}
 				 
 			} 
 			else {
-				LOG.info("HelloIOIO", "Pedal is released 2");
-				Log.i("HelloIOIO", "Pedal is released 2");
+				LOG.info("Pedal is released 2");
 				// PEDAL IS RELEASED
 				// reset servos
 				resetAll();
@@ -395,15 +503,14 @@ public class MainActivity extends IOIOActivity {
 			// set all servos to neutral positions
 			for (int servo = 0; servo < 12; servo++) {
 				// initial = 1.0 + corrections
-				Log.i("HelloIOIO","Servo Value: "+servo);
-				Log.i("HelloIOIO","servoSettings: "+ servoSettings.getInitial(servo));
+				LOG.debug("Servo Value: {}", servo);
+				LOG.debug("servoSettings: {}", servoSettings.getInitial(servo));
 				setServo(servo, servoSettings.getInitial(servo));
 				// probably not?
 				//setServo(servo, 1.0f);
 			}
 			turnOffFretLEDs();
-			LOG.info("HelloIOIO", "Servos in neutral position default");
-			Log.i("HelloIOIO","resetAll - Servos in neutral position default");
+			LOG.info("Servos in neutral position default");
 		}
 
 		/**
@@ -429,8 +536,7 @@ public class MainActivity extends IOIOActivity {
 		 * @throws InterruptedException
 		 */
 		public void setServo(int servoNum, float pos) throws ConnectionLostException, InterruptedException {
-			LOG.debug("HelloIOIO", "setServo call: servo: {}, value: {}", servoNum, pos);
-			Log.i("HelloIOIO", "setServo call: " + "ServoNum:" + servoNum +"Servo Value: "+ pos);
+			LOG.debug("setServo call: servo: {}, value: {}", servoNum, pos);
 			setPulseWidth(servoNum, pos + 1.0f);  //
 		}
 
@@ -459,7 +565,6 @@ public class MainActivity extends IOIOActivity {
 		 */
 		public void setLED(int stringNum, int fretNum) throws ConnectionLostException {
 			LOG.debug("HelloIOIO", "setLED call: string: {}, fretNum: {}", stringNum, fretNum);
-			Log.i("HelloIOIO", "setLED call: " +"setLED"+ stringNum + "FretNum:"+ fretNum);
 			if (fretNum <= 0) {
 				if (fretLEDsTurnedOn[stringNum] != null) {
 					// if we know what was last turned on
@@ -487,8 +592,7 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		public void disconnected() {
-			LOG.info("HelloIOIO", "IOIO disconnected");
-			Log.i("HelloIOIO", "IOIO disconnected");
+			LOG.info("IOIO disconnected");
 		}
 
 		/**
@@ -496,8 +600,7 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		public void incompatible() {
-			LOG.info("HelloIOIO", "Incompatible firmware version of IOIO");
-			Log.i("HelloIOIO", "Incompatible firmware version of IOIO");
+			LOG.info("Incompatible firmware version of IOIO");
 		}
 	};
 
@@ -508,14 +611,22 @@ public class MainActivity extends IOIOActivity {
 	 * @return current chord or null
 	 */
 	public Chord getCurrentChord() {
-		Line line = songSample.getSong().getLine(0);
+		Line line = song.getLine(lineIdx);
 		if (line == null) {
-			throw new IllegalArgumentException("line is not available!");
+			lineIdx = 0;
+			chordIdx = -1;
+			LOG.debug("line is null");
+			return null;
+		} else {
+			LOG.debug("line idx: {}, chord idx: {}", lineIdx, chordIdx);
+			if (chordIdx < line.getChords().size()) {
+				return line.getChords().get(chordIdx).getChord();
+			} else {
+				lineIdx++;
+				chordIdx = 0;
+				return getCurrentChord();
+			}
 		}
-		if (chordIdx < line.getChords().size()) {
-			return line.getChords().get(chordIdx).getChord();
-		}
-		return null;
 	}
 
 
@@ -544,5 +655,86 @@ public class MainActivity extends IOIOActivity {
 			chordIdx = -1;
 			currentChordView.setText("---");
 		}
+	}
+	
+	public boolean fillWith(Song song, ChordManager manager) {
+		boolean error = false;
+		ChordBag used = song.getUsedChords();
+		for (Part part : song.getParts()) {
+			// check empty lines
+			for (Line line : part.getLines()) {
+		 
+				for (ChordRef ref : line.getChords()) {
+					String libraryName = Chord.getLibraryName(ref.getChordId());
+					String chordName = Chord.getChordName(ref.getChordId());
+					LOG.debug("libname: {}, chordname: {}", libraryName, chordName);
+					//ChordManager pc = new ChordManager();
+					//pc.
+					Chord chord = used.findByName(chordName);
+					if (chord != null) {
+						ref.setChord(chord);
+						ChordLibrary lib = manager.findByName(libraryName);
+						if (lib == null) {
+							lib = new ChordLibrary(libraryName);
+						}
+						Chord existing = lib.findByName(chordName);
+						if (existing == null) {
+							lib.add(chord);
+						} else {
+							// TODO - compare the two.. now left the one in library as is...
+							LOG.debug("should check content equality of chords - ? {}, {}", libraryName, chordName);
+						}
+						continue;
+					} else {
+						// chord was not in usedchords section
+						LOG.error("no chord for name: {}", chordName);
+					}
+					
+					/*ChordLibrary lib = manager.findByName(libraryName);
+					if (lib == null) {
+						LOG.debug("have to create lib: {}", libraryName);
+						lib = new ChordLibrary(libraryName);
+					}
+					Chord chord = lib.findByName(chordName);
+					if (chord != null) {
+						LOG.debug("chord with name: {} found", chordName);
+						ref.setChord(chord);
+					} else {
+						LOG.error("no chord for name: {}", chordName);
+					}
+					*/
+					/*else {
+						// chord was not in usedchords section
+						ChordLibrary library = manager.getChordLibraries().get(libraryName);
+						if (library != null) {
+							Chord existing = library.findByName(chordName);
+							if (existing != null) {
+								ref.setChord(existing);
+								used.add(existing);
+								continue;
+							}
+						}
+						
+						if (libraryName.startsWith(ChordManager.USER_PREFIX)) {
+							// look into current chord buffer on chords page
+							RoboTarChordsPage chPage = mainFrame.getChordsPage();
+							if (chPage != null) {
+								@SuppressWarnings("unchecked")
+								DefaultListModel<Chord> model = (DefaultListModel<Chord>)chPage.getChordListModel();
+								if (model != null) {
+									Chord existing = findByName(model, ref.getChordId()); 
+									if (existing != null) {
+										ref.setChord(existing);
+										used.add(existing);
+										continue;
+									}
+								}
+							}
+						}
+					}*/
+				}
+			}
+		}
+		return error;
 	}
 }

@@ -3,6 +3,10 @@ package ioio.examples.hello;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import android.util.Log;
 import cz.versarius.xchords.Chord;
 import cz.versarius.xchords.ChordLibrary;
 import cz.versarius.xchords.ChordManager;
@@ -13,6 +17,8 @@ import cz.versarius.xsong.Song;
 import cz.versarius.xsong.Verse;
 
 public class SongSample {
+	private static final Logger LOG = LoggerFactory.getLogger(SongSample.class);
+
 	private Song song;
 	
 	public SongSample() {
@@ -60,24 +66,31 @@ public class SongSample {
 
 	public boolean fillWith(ChordManager manager) {
 		boolean error = false;
+		/*
+		for (Part part : parts) {
+			// check empty lines
+			for (Line line : part.getLines()) {
+			}
+		}
+		 */
 		Line line = song.getLine(0);
 		for (ChordRef ref : line.getChords()) {
 			String libraryName = Chord.getLibraryName(ref.getChordId());
 			String chordName = Chord.getChordName(ref.getChordId());
-			System.out.println("libname: " + libraryName + ", chordname: " + chordName);
+			LOG.debug("libname: {}, chordname: {}", libraryName, chordName);
 			//ChordManager pc = new ChordManager();
 			//pc.
 			ChordLibrary lib = manager.findByName(libraryName);
 			if (lib == null) {
-				System.out.println("have to create libraryName");
+				LOG.debug("have to create {}", libraryName);
 				lib = new ChordLibrary(libraryName);
 			}
 			Chord chord = lib.findByName(chordName);
 			if (chord != null) {
-				System.out.println("chord set with: " + "chordName" + " found");
+				LOG.debug("chord with name: {} found", chordName);
 				ref.setChord(chord);
 			} else {
-				System.out.println("no chord");
+				LOG.debug("no chord for name: {}", chordName);
 			} /*else {
 				// chord was not in usedchords section
 				ChordLibrary library = manager.getChordLibraries().get(libraryName);
