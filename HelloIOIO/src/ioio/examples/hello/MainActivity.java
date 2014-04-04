@@ -1,9 +1,29 @@
 package ioio.examples.hello;
 
+import ioio.lib.api.DigitalInput;
+import ioio.lib.api.DigitalOutput;
+import ioio.lib.api.TwiMaster;
+import ioio.lib.api.exception.ConnectionLostException;
+import ioio.lib.util.BaseIOIOLooper;
+import ioio.lib.util.IOIOLooper;
+import ioio.lib.util.android.IOIOActivity;
+
 import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.robotar.ioio.LEDSettings;
 import com.robotar.ioio.Pins;
@@ -18,20 +38,6 @@ import cz.versarius.xsong.Line;
 import cz.versarius.xsong.Part;
 import cz.versarius.xsong.Song;
 import cz.versarius.xsong.XMLSongLoader;
-import ioio.lib.api.DigitalInput;
-import ioio.lib.api.DigitalOutput;
-import ioio.lib.api.TwiMaster;
-import ioio.lib.api.exception.ConnectionLostException;
-import ioio.lib.util.BaseIOIOLooper;
-import ioio.lib.util.IOIOLooper;
-import ioio.lib.util.android.IOIOActivity;
-import ioio.examples.hello.R;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 /**
  * This is the main activity of the HelloIOIO example application.
@@ -737,4 +743,35 @@ public class MainActivity extends IOIOActivity {
 		}
 		return error;
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_settings:
+	            LOG.debug("settings ...");
+	        	//openSettings();
+	            return true;
+	        case R.id.servo_corrections:
+	        	LOG.debug("servo corrections");
+	        	openServoCorrections();
+	        	return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+
+	private void openServoCorrections() {
+		Intent intent = new Intent(this, ServoSettingsActivity.class);
+	    startActivity(intent);
+	}
+	
 }

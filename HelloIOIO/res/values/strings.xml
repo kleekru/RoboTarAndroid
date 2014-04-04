@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">RoboTar</string>
     <string name="toggleButton">Toggle Button</string>
     <string name="songTitle">Song title</string>
     <string name="emptyChord">---</string>
     <string name="simPedal">SimPedal</string>
+    <string name="action_settings">Settings</string>
+    <string name="servo_corrections">Servo corrections</string>
+    <string name="title_activity_servo_settings">ServoSettingsActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>
