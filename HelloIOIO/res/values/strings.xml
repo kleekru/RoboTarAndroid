@@ -5,10 +5,18 @@
     <string name="toggleButton">Toggle Button</string>
     <string name="songTitle">Song title</string>
     <string name="emptyChord">---</string>
-    <string name="simPedal">SimPedal</string>
+    <string name="simPedal">Next Chord Button</string>
     <string name="action_settings">Settings</string>
     <string name="servo_corrections">Servo corrections</string>
-    <string name="title_activity_servo_settings">ServoSettingsActivity</string>
+    <string name="title_activity_servo_settings">Servo corrections</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="action_songs">Songs</string>
+    <string name="title_activity_show_songs">Show songs</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="next_chord_control">Next chord control</string>
+    <string name="next_chord_control_summ_on">Transition to next chord is controlled by pressing the foot pedal device</string>
+    <string name="next_chord_control_summ_off">Transition to next chord is controlled by pressing application button</string>
+    <string name="next_chord_control_text_on">Foot pedal</string>
+ 	<string name="next_chord_control_text_off">App button</string>
+ 
 </resources>

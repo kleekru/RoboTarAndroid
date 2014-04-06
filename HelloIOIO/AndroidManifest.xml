@@ -16,7 +16,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat"  >
+        android:theme="@style/Theme.AppCompat" >
         <uses-library
             android:name="com.android.future.usb.accessory"
             android:required="false" />
@@ -24,8 +24,7 @@
         <activity
             android:name="ioio.examples.hello.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-             >
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,6 +41,22 @@
         <activity
             android:name="ioio.examples.hello.ServoSettingsActivity"
             android:label="@string/title_activity_servo_settings"
+            android:parentActivityName="ioio.examples.hello.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
+        <activity
+            android:name="ioio.examples.hello.ShowSongsActivity"
+            android:label="@string/title_activity_show_songs" 
+            android:parentActivityName="ioio.examples.hello.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
+        <activity
+            android:name="ioio.examples.hello.SettingsActivity"
+            android:label="@string/title_activity_settings" 
             android:parentActivityName="ioio.examples.hello.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

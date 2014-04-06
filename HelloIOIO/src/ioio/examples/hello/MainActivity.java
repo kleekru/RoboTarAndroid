@@ -14,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,6 +66,11 @@ public class MainActivity extends IOIOActivity {
 	private int lineIdx;
 	private int chordIdx;
 
+	/* <code>true</code> for changing next chord with pedal
+	 * <code>false</code> for changing next chord with app button
+	 */
+	private boolean usePedal;
+	
 	protected boolean ledOn_;
 
 	//private String rootFolder = "/sdcard/";
@@ -88,6 +95,10 @@ public class MainActivity extends IOIOActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		SharedPreferences pref = getSharedPreferences("preferences", 0);
+		usePedal = pref.getBoolean("pref_next_chord_control", true);
+		
 		stateLedButton = (ToggleButton) findViewById(R.id.button);
 		currentChordView = (TextView) findViewById(R.id.currentChordView);
 		title = (TextView) findViewById(R.id.title);
@@ -135,9 +146,30 @@ public class MainActivity extends IOIOActivity {
 		// display current chord view
 		currentChordView.setText("---");
 
+		// display or hide next chord button, based on the settings
+		if (usePedal) {
+			simPedalButton.setVisibility(View.GONE);
+		} else {
+			simPedalButton.setVisibility(View.VISIBLE);
+		}
 		guiReady = true;
 	}
 
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus) {
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			usePedal = pref.getBoolean("pref_next_chord_control", true);
+			LOG.debug("value is : {}", usePedal);
+			if (usePedal) {
+				simPedalButton.setVisibility(View.GONE);
+			} else {
+				simPedalButton.setVisibility(View.VISIBLE);
+			}
+		}
+	}
+	
 	private CharSequence getSongText(Song song2) {
 		StringBuilder sb = new StringBuilder(30);
 		for (Part part : song2.getParts()) {
@@ -756,9 +788,13 @@ public class MainActivity extends IOIOActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
+	    	case R.id.action_songs:
+	    		LOG.debug("songs ...");
+	    		showSongs();
+	    		return true;
 	        case R.id.action_settings:
 	            LOG.debug("settings ...");
-	        	//openSettings();
+	        	openSettings();
 	            return true;
 	        case R.id.servo_corrections:
 	        	LOG.debug("servo corrections");
@@ -774,4 +810,13 @@ public class MainActivity extends IOIOActivity {
 	    startActivity(intent);
 	}
 	
+	private void showSongs() {
+		Intent intent = new Intent(this, ShowSongsActivity.class);
+	    startActivity(intent);
+	}
+	
+	private void openSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+	    startActivity(intent);
+	}
 }
