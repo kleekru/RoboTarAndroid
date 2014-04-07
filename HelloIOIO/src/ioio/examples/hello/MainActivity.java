@@ -403,44 +403,64 @@ public class MainActivity extends IOIOActivity {
 		public void loop() throws ConnectionLostException,
 		InterruptedException {
 
+			if (!guiReady) {
+				LOG.error("The GUI is not ready yet!");
+				return;
+			}
 			//LOG.info("Start of the loop method");
 			//stateLED.write(!stateLedButton.isChecked());
+			if (usePedal) {
+				// initial position
+				// high = true, low = false
+				boolean pedalInHighPosition = pedalButton.read();
 
-			// initial position
-			// high = true, low = false
-			boolean pedalInHighPosition = pedalButton.read();
-			//LOG.debug("current position of pedal is: {}", pedalInHighPosition);
+				if (lastKnownPedalPosition == pedalInHighPosition) {
+					// no change from last time
+					return;
+				}
+				// save current status of the pedal
+				lastKnownPedalPosition = pedalInHighPosition;
 
-
-			//LOG.debug("lastPedalPosition: {}", lastKnownPedalPosition);
-			if (lastKnownPedalPosition == pedalInHighPosition) {
-				// no change from last time
-				return;
-			}
-			// save current status of the pedal
-			lastKnownPedalPosition = pedalInHighPosition;
-
-
-			if (!pedalInHighPosition) {
-				LOG.info("HelloIOIO", "Pedal is pressed 2");
-				// PEDAL IS PRESSED
-				//stateLedButton.setChecked(true);
-
-				//workingKevinsMethod();
+				if (!pedalInHighPosition) {
+					LOG.info("HelloIOIO", "Pedal is pressed 2");
+					// PEDAL IS PRESSED
+					
+					Chord chord = moveByOneChord();
+					if (chord == null) {
+						// stop all
+						prepareNoChord();
+					} else {
+						// prepare servo settings and led settings
+						prepareChord(chord);
+					}
+		
+				} 
+				else {
+					LOG.info("Pedal is released 2");
+					// PEDAL IS RELEASED
+					// reset servos - maybe not needed - we can save one move of servos?
+					// we could, if we store old settings and new settings
+					// we have to reset those servos, that are not involved in new settings
+					// and modify existing, that are in both and set the new ones
+					// TODO, for now, let is as it was
+					resetAll();
+					return;
+				}
+			} else {
+				// progress to next chord is controlled by app button - idx is already set (onclick)
 				
-		// we are checking and logging the status first
-		if (!guiReady) {
-			LOG.error("The GUI is not ready yet!");
-		} else {
-			// if we already play the song, play next chord
-			if (chordIdx == -1) {
-				// no chord selected - we are not playing the song, quit
-				prepareNoChord();
-				return;
-			}
-			// prepare servo settings and led settings
-			prepareChord(getCurrentChord());
+				// we are checking and logging the status first
+				// if we already play the song, play next chord
+				if (chordIdx == -1) {
+					// no chord selected - we are not playing the song
+					prepareNoChord();
+				}
+				// prepare servo settings and led settings
+				prepareChord(getCurrentChord());
 
+			}
+			
+			// send the prepared values of servos and leds through ioio to robotar
 			// debugging servos and leds values for current chord
 			// if in problems, uncomment and investigate
 			LOG.debug("got chord: {}" + servoSettings.debugOutput());
@@ -462,15 +482,7 @@ public class MainActivity extends IOIOActivity {
 			}
 			long timeEnd = System.currentTimeMillis();
 			LOG.debug("It took {} ms to execute 6 servos and LEDs", timeEnd - timeStart);
-				}
-				 
-			} 
-			else {
-				LOG.info("Pedal is released 2");
-				// PEDAL IS RELEASED
-				// reset servos
-				resetAll();
-			}
+			
 
 			//PWM Range below is 0.0. to 1.5.  Cycle through each servo channel.
 	/*for (int c=0; c<16; c++) {
@@ -485,8 +497,6 @@ public class MainActivity extends IOIOActivity {
 			setServo(c, p);
 			}
 		}*/
-
-			//resetAll();
 
 		}
 
@@ -643,6 +653,18 @@ public class MainActivity extends IOIOActivity {
 	};
 
 
+	private Chord moveByOneChord() {
+		chordIdx++;
+		Chord curChord = getCurrentChord();
+		if (curChord != null) {
+			currentChordView.setText(curChord.getName());
+		} else {
+			chordIdx = -1;
+			currentChordView.setText("---");
+		}
+		return curChord;
+	}
+	
 	/** 
 	 * Get current chord in song, which should be played.
 	 * 
@@ -685,14 +707,7 @@ public class MainActivity extends IOIOActivity {
 	 * @param view
 	 */
 	public void onClick(View view) {
-		chordIdx++;
-		Chord curChord = getCurrentChord();
-		if (curChord != null) {
-			currentChordView.setText(curChord.getName());
-		} else {
-			chordIdx = -1;
-			currentChordView.setText("---");
-		}
+		moveByOneChord();
 	}
 	
 	public boolean fillWith(Song song, ChordManager manager) {
