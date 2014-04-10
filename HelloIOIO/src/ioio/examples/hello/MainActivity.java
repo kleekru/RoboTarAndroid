@@ -16,14 +16,12 @@ import org.slf4j.LoggerFactory;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -74,7 +72,6 @@ public class MainActivity extends IOIOActivity {
 	protected boolean ledOn_;
 
 	//private String rootFolder = "/sdcard/";
-	private String robotarFolder = "rtsongs/";
 	
 	/**
 	 * ServoSettings for the current chord. 
@@ -111,25 +108,39 @@ public class MainActivity extends IOIOActivity {
 		LOG.info("HelloIOIO", "chord manager is initialized?: {}", chordManager.isInitialized());
 		
 		// check external media (sdcard) TODO - full status
-		boolean storageReadable = isExternalStorageReadable();
-		boolean storageWritable = isExternalStorageWritable();
+		boolean storageReadable = FileUtil.isExternalStorageReadable();
+		boolean storageWritable = FileUtil.isExternalStorageWritable();
 		if (!storageReadable || !storageWritable) {
 			LOG.error("robotar", "cannot access storage - sdcard, readable:" + storageReadable + ", writable: " + storageWritable);
 			songText.setText("problem with storage, check log");
 			return;
 		} 
 		
+		loadSong();
+		
+		guiReady = true;
+	}
+
+	private void loadSong() {
 		// get or create robotar storage dir 
-		File rtFolder = getRobotarStorageDir(robotarFolder);
+		File rtFolder = FileUtil.getRobotarStorageDir(FileUtil.ROBOTAR_FOLDER);
 		if (!rtFolder.isDirectory()) {
 			songText.setText("cannot create folder2");
 			return;
 		}
 		
 		// test load of default song
-		String defaultSongName = "Kev Blues.xml";
+		String songName = "Kev Blues.xml";
 		XMLSongLoader songLoader = new XMLSongLoader();
-		song = songLoader.loadSong(new File(rtFolder, defaultSongName));
+		// look if we have something better to load
+		Intent intent = getIntent();
+		String chosenSongFilename = intent.getStringExtra("myfilename");
+		LOG.debug("chosen song: {}", chosenSongFilename);
+		if (chosenSongFilename != null && !chosenSongFilename.isEmpty()) {
+			songName = chosenSongFilename;
+		}
+		LOG.debug("songName: {}", songName);
+		song = songLoader.loadSong(new File(rtFolder, songName));
 		title.setText(song.getFullTitle());
 		LOG.info("song title: {}", song.getFullTitle());
 		
@@ -152,9 +163,14 @@ public class MainActivity extends IOIOActivity {
 		} else {
 			simPedalButton.setVisibility(View.VISIBLE);
 		}
-		guiReady = true;
 	}
-
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+	    super.onNewIntent(intent);
+	    setIntent(intent);
+	}
+	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
@@ -162,11 +178,9 @@ public class MainActivity extends IOIOActivity {
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			usePedal = pref.getBoolean("pref_next_chord_control", true);
 			LOG.debug("value is : {}", usePedal);
-			if (usePedal) {
-				simPedalButton.setVisibility(View.GONE);
-			} else {
-				simPedalButton.setVisibility(View.VISIBLE);
-			}
+			
+			// load song
+			loadSong();
 		}
 	}
 	
@@ -219,36 +233,6 @@ public class MainActivity extends IOIOActivity {
 		
 		sb.append("\n");
 		return sb.toString();
-	}
-	
-	/* Checks if external storage is available for read and write */
-	public boolean isExternalStorageWritable() {
-	    String state = Environment.getExternalStorageState();
-	    if (Environment.MEDIA_MOUNTED.equals(state)) {
-	        return true;
-	    }
-	    return false;
-	}
-
-	/* Checks if external storage is available to at least read */
-	public boolean isExternalStorageReadable() {
-	    String state = Environment.getExternalStorageState();
-	    if (Environment.MEDIA_MOUNTED.equals(state) ||
-	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-	        return true;
-	    }
-	    return false;
-	}
-	
-	public File getRobotarStorageDir(String robotarFolder) {
-	    // Get the directory for the user's public documents directory.
-		// this required api level 19, therefore we put our robotarfolder only at the root 
-	    // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS
-		File file = new File(Environment.getExternalStorageDirectory(), robotarFolder);
-	    if (!file.mkdirs()) {
-	        LOG.error("Directory not created");
-	    }
-	    return file;
 	}
 	
 	/**

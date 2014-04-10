@@ -9,6 +9,7 @@
     tools:context="ioio.examples.hello.ShowSongsActivity$PlaceholderFragment" >
 
     <TextView
+        android:id="@+id/showSongsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
