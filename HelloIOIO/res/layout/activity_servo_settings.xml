@@ -4,4 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ioio.examples.hello.ServoSettingsActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+   <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="4" >
+    </GridView>
+
+</FrameLayout>

@@ -18,5 +18,6 @@
     <string name="next_chord_control_summ_off">Transition to next chord is controlled by pressing application button</string>
     <string name="next_chord_control_text_on">Foot pedal</string>
  	<string name="next_chord_control_text_off">App button</string>
- 
+ 	<string name="servo1">S1</string>
+ 	<string name="servo2">S2</string>
 </resources>

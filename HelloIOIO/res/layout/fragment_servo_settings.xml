@@ -6,11 +6,133 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/relativeLayout1"
     tools:context="ioio.examples.hello.ServoSettingsActivity$PlaceholderFragment" >
 
     <TextView
+        android:id="@+id/textViewServo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignBaseline="@+id/editServo1Neutral"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:focusable="false"
+        android:text="@string/servo1" />
 
+    <EditText
+        android:id="@+id/editServo1Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="14dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+        
+        <requestFocus />
+    </EditText>
+    
+    <EditText
+        android:id="@+id/editServo1Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo1Neutral"
+        android:layout_alignBottom="@+id/editServo1Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo1Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo1Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo1Muted"
+        android:layout_alignBottom="@+id/editServo1Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo1Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo1Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo1Left"
+        android:layout_alignBottom="@+id/editServo1Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo1Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <TextView
+        android:id="@+id/textViewServo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo2Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo2Neutral"
+        android:focusable="false"
+        android:text="@string/servo2" />
+
+    <EditText
+        android:id="@+id/editServo2Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo1Neutral"
+        android:layout_alignLeft="@+id/editServo1Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo2Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo2Neutral"
+        android:layout_alignBottom="@+id/editServo2Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo2Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo2Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo2Muted"
+        android:layout_alignBottom="@+id/editServo2Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo2Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo2Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo2Left"
+        android:layout_alignBottom="@+id/editServo2Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo2Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    
+    
 </RelativeLayout>

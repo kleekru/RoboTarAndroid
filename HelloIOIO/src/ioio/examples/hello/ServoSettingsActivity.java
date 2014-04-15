@@ -9,9 +9,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.TextView;
 import android.os.Build;
 
 public class ServoSettingsActivity extends ActionBarActivity {
+	ArrayAdapter adapter;
+	MyAdapter ma;
+	Object[] list = { 1, 2 };
+    String[] texts = {"aada", "bbdb", "ccc", "ddd", "eee", "fff", "eee", "hhh", "iii"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +31,15 @@ public class ServoSettingsActivity extends ActionBarActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		GridView gridview = (GridView) findViewById(R.id.gridView1);
+		//adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, texts);
+        //gridview.setAdapter(adapter);
+        //ma = new MyAdapter(gridview.getContext(), texts);
+        //gridview.setAdapter(ma);
+        // neutral/muted/left/right
+        
+		//gridview.setAdapter(new MyAdapter(this));
 	}
 
 	@Override
@@ -57,6 +75,26 @@ public class ServoSettingsActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_servo_settings,
 					container, false);
+			EditText [][]servos = new EditText[12][4];
+			servos[0][0] = (EditText) rootView.findViewById(R.id.editServo1Neutral);
+			servos[0][1] = (EditText) rootView.findViewById(R.id.editServo1Muted);
+			servos[0][2] = (EditText) rootView.findViewById(R.id.editServo1Left);
+			servos[0][3] = (EditText) rootView.findViewById(R.id.editServo1Right);
+	        
+			servos[1][0] = (EditText) rootView.findViewById(R.id.editServo2Neutral);
+			servos[1][1] = (EditText) rootView.findViewById(R.id.editServo2Muted);
+			servos[1][2] = (EditText) rootView.findViewById(R.id.editServo2Left);
+			servos[1][3] = (EditText) rootView.findViewById(R.id.editServo2Right);
+			
+			float x = 0.1f;
+			for (int i = 0; i < 2; i++) {
+				for (int j = 0; j < 4; j++) {
+					servos[i][j].setText(Float.toString(x));
+					x += 0.1;
+				}
+			}
+			//servos[0][1].setText("0.3");
+	        
 			return rootView;
 		}
 	}
