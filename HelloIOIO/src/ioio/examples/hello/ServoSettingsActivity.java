@@ -86,8 +86,58 @@ public class ServoSettingsActivity extends ActionBarActivity {
 			servos[1][2] = (EditText) rootView.findViewById(R.id.editServo2Left);
 			servos[1][3] = (EditText) rootView.findViewById(R.id.editServo2Right);
 			
+			servos[2][0] = (EditText) rootView.findViewById(R.id.editServo3Neutral);
+			servos[2][1] = (EditText) rootView.findViewById(R.id.editServo3Muted);
+			servos[2][2] = (EditText) rootView.findViewById(R.id.editServo3Left);
+			servos[2][3] = (EditText) rootView.findViewById(R.id.editServo3Right);
+			
+			servos[3][0] = (EditText) rootView.findViewById(R.id.editServo4Neutral);
+			servos[3][1] = (EditText) rootView.findViewById(R.id.editServo4Muted);
+			servos[3][2] = (EditText) rootView.findViewById(R.id.editServo4Left);
+			servos[3][3] = (EditText) rootView.findViewById(R.id.editServo4Right);
+			
+			servos[4][0] = (EditText) rootView.findViewById(R.id.editServo5Neutral);
+			servos[4][1] = (EditText) rootView.findViewById(R.id.editServo5Muted);
+			servos[4][2] = (EditText) rootView.findViewById(R.id.editServo5Left);
+			servos[4][3] = (EditText) rootView.findViewById(R.id.editServo5Right);
+	        
+			servos[5][0] = (EditText) rootView.findViewById(R.id.editServo6Neutral);
+			servos[5][1] = (EditText) rootView.findViewById(R.id.editServo6Muted);
+			servos[5][2] = (EditText) rootView.findViewById(R.id.editServo6Left);
+			servos[5][3] = (EditText) rootView.findViewById(R.id.editServo6Right);
+			
+			servos[6][0] = (EditText) rootView.findViewById(R.id.editServo7Neutral);
+			servos[6][1] = (EditText) rootView.findViewById(R.id.editServo7Muted);
+			servos[6][2] = (EditText) rootView.findViewById(R.id.editServo7Left);
+			servos[6][3] = (EditText) rootView.findViewById(R.id.editServo7Right);
+			
+			servos[7][0] = (EditText) rootView.findViewById(R.id.editServo8Neutral);
+			servos[7][1] = (EditText) rootView.findViewById(R.id.editServo8Muted);
+			servos[7][2] = (EditText) rootView.findViewById(R.id.editServo8Left);
+			servos[7][3] = (EditText) rootView.findViewById(R.id.editServo8Right);
+			
+			servos[8][0] = (EditText) rootView.findViewById(R.id.editServo9Neutral);
+			servos[8][1] = (EditText) rootView.findViewById(R.id.editServo9Muted);
+			servos[8][2] = (EditText) rootView.findViewById(R.id.editServo9Left);
+			servos[8][3] = (EditText) rootView.findViewById(R.id.editServo9Right);
+	        
+			servos[9][0] = (EditText) rootView.findViewById(R.id.editServo10Neutral);
+			servos[9][1] = (EditText) rootView.findViewById(R.id.editServo10Muted);
+			servos[9][2] = (EditText) rootView.findViewById(R.id.editServo10Left);
+			servos[9][3] = (EditText) rootView.findViewById(R.id.editServo10Right);
+			
+			servos[10][0] = (EditText) rootView.findViewById(R.id.editServo11Neutral);
+			servos[10][1] = (EditText) rootView.findViewById(R.id.editServo11Muted);
+			servos[10][2] = (EditText) rootView.findViewById(R.id.editServo11Left);
+			servos[10][3] = (EditText) rootView.findViewById(R.id.editServo11Right);
+			
+			servos[11][0] = (EditText) rootView.findViewById(R.id.editServo12Neutral);
+			servos[11][1] = (EditText) rootView.findViewById(R.id.editServo12Muted);
+			servos[11][2] = (EditText) rootView.findViewById(R.id.editServo12Left);
+			servos[11][3] = (EditText) rootView.findViewById(R.id.editServo12Right);
+			
 			float x = 0.1f;
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 12; i++) {
 				for (int j = 0; j < 4; j++) {
 					servos[i][j].setText(Float.toString(x));
 					x += 0.1;

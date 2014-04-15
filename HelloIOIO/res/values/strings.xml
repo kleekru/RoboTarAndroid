@@ -20,4 +20,15 @@
  	<string name="next_chord_control_text_off">App button</string>
  	<string name="servo1">S1</string>
  	<string name="servo2">S2</string>
+ 	<string name="servo3">S3</string>
+ 	<string name="servo4">S4</string>
+	<string name="servo5">S5</string>
+ 	<string name="servo6">S6</string>
+ 	<string name="servo7">S7</string>
+ 	<string name="servo8">S8</string>
+ 	<string name="servo9">S9</string>
+ 	<string name="servo10">S10</string>
+ 	<string name="servo11">S11</string>
+ 	<string name="servo12">S12</string>
+ 	
 </resources>

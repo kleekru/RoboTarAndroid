@@ -23,7 +23,7 @@
         android:id="@+id/editServo1Neutral"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="14dp"
         android:ems="10"
         android:inputType="numberDecimal"
@@ -133,6 +133,640 @@
         android:inputType="numberDecimal"
         android:width="60dp" />
 
+     <TextView
+        android:id="@+id/textViewServo3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo3Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo3Neutral"
+        android:focusable="false"
+        android:text="@string/servo3" />
+
+    <EditText
+        android:id="@+id/editServo3Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo2Neutral"
+        android:layout_alignLeft="@+id/editServo2Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo3Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo3Neutral"
+        android:layout_alignBottom="@+id/editServo3Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo3Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo3Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo3Muted"
+        android:layout_alignBottom="@+id/editServo3Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo3Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo3Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo3Left"
+        android:layout_alignBottom="@+id/editServo3Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo3Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+     <TextView
+        android:id="@+id/textViewServo4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo4Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo4Neutral"
+        android:focusable="false"
+        android:text="@string/servo4" />
+
+    <EditText
+        android:id="@+id/editServo4Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo3Neutral"
+        android:layout_alignLeft="@+id/editServo3Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo4Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo4Neutral"
+        android:layout_alignBottom="@+id/editServo4Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo4Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo4Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo4Muted"
+        android:layout_alignBottom="@+id/editServo4Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo4Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo4Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo4Left"
+        android:layout_alignBottom="@+id/editServo4Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo4Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+     <TextView
+        android:id="@+id/textViewServo5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo5Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo5Neutral"
+        android:focusable="false"
+        android:text="@string/servo5" />
+
+    <EditText
+        android:id="@+id/editServo5Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo4Neutral"
+        android:layout_alignLeft="@+id/editServo4Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo5Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo5Neutral"
+        android:layout_alignBottom="@+id/editServo5Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo5Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo5Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo5Muted"
+        android:layout_alignBottom="@+id/editServo5Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo5Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo5Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo5Left"
+        android:layout_alignBottom="@+id/editServo5Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo5Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
     
     
+     <TextView
+        android:id="@+id/textViewServo6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo6Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo6Neutral"
+        android:focusable="false"
+        android:text="@string/servo6" />
+
+    <EditText
+        android:id="@+id/editServo6Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo5Neutral"
+        android:layout_alignLeft="@+id/editServo5Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo6Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo6Neutral"
+        android:layout_alignBottom="@+id/editServo6Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo6Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo6Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo6Muted"
+        android:layout_alignBottom="@+id/editServo6Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo6Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo6Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo6Left"
+        android:layout_alignBottom="@+id/editServo6Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo6Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+    
+     <TextView
+        android:id="@+id/textViewServo7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo7Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo7Neutral"
+        android:focusable="false"
+        android:text="@string/servo7" />
+
+    <EditText
+        android:id="@+id/editServo7Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo6Neutral"
+        android:layout_alignLeft="@+id/editServo6Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo7Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo7Neutral"
+        android:layout_alignBottom="@+id/editServo7Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo7Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo7Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo7Muted"
+        android:layout_alignBottom="@+id/editServo7Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo7Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo7Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo7Left"
+        android:layout_alignBottom="@+id/editServo7Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo7Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+    
+     <TextView
+        android:id="@+id/textViewServo8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo8Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo8Neutral"
+        android:focusable="false"
+        android:text="@string/servo8" />
+
+    <EditText
+        android:id="@+id/editServo8Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo7Neutral"
+        android:layout_alignLeft="@+id/editServo7Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo8Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo8Neutral"
+        android:layout_alignBottom="@+id/editServo8Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo8Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo8Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo8Muted"
+        android:layout_alignBottom="@+id/editServo8Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo8Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo8Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo8Left"
+        android:layout_alignBottom="@+id/editServo8Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo8Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+    
+     <TextView
+        android:id="@+id/textViewServo9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo9Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo9Neutral"
+        android:focusable="false"
+        android:text="@string/servo2" />
+
+    <EditText
+        android:id="@+id/editServo9Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo8Neutral"
+        android:layout_alignLeft="@+id/editServo8Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo9Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo9Neutral"
+        android:layout_alignBottom="@+id/editServo9Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo9Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo9Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo9Muted"
+        android:layout_alignBottom="@+id/editServo9Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo9Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo9Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo9Left"
+        android:layout_alignBottom="@+id/editServo9Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo9Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+    
+     <TextView
+        android:id="@+id/textViewServo10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo10Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo10Neutral"
+        android:focusable="false"
+        android:text="@string/servo10" />
+
+    <EditText
+        android:id="@+id/editServo10Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo9Neutral"
+        android:layout_alignLeft="@+id/editServo9Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo10Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo10Neutral"
+        android:layout_alignBottom="@+id/editServo10Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo10Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo10Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo10Muted"
+        android:layout_alignBottom="@+id/editServo10Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo10Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo10Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo10Left"
+        android:layout_alignBottom="@+id/editServo10Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo10Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+    
+     <TextView
+        android:id="@+id/textViewServo11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo11Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo11Neutral"
+        android:focusable="false"
+        android:text="@string/servo11" />
+
+    <EditText
+        android:id="@+id/editServo11Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo10Neutral"
+        android:layout_alignLeft="@+id/editServo10Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo11Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo11Neutral"
+        android:layout_alignBottom="@+id/editServo11Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo11Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo11Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo11Muted"
+        android:layout_alignBottom="@+id/editServo11Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo11Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo11Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo11Left"
+        android:layout_alignBottom="@+id/editServo11Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo11Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+    
+    
+     <TextView
+        android:id="@+id/textViewServo12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo12Neutral"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toLeftOf="@+id/editServo12Neutral"
+        android:focusable="false"
+        android:text="@string/servo12" />
+
+    <EditText
+        android:id="@+id/editServo12Neutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/editServo11Neutral"
+        android:layout_alignLeft="@+id/editServo11Neutral"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo12Muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo12Neutral"
+        android:layout_alignBottom="@+id/editServo12Neutral"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo12Neutral"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/editServo12Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo12Muted"
+        android:layout_alignBottom="@+id/editServo12Muted"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo12Muted"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
+
+    <EditText
+        android:id="@+id/editServo12Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editServo12Left"
+        android:layout_alignBottom="@+id/editServo12Left"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/editServo12Left"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:width="60dp" />
 </RelativeLayout>
