@@ -27,7 +27,7 @@
         android:layout_marginTop="14dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
         
         <requestFocus />
     </EditText>
@@ -42,7 +42,7 @@
         android:layout_toRightOf="@+id/editServo1Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -56,7 +56,7 @@
         android:layout_toRightOf="@+id/editServo1Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo1Right"
@@ -68,7 +68,7 @@
         android:layout_toRightOf="@+id/editServo1Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <TextView
         android:id="@+id/textViewServo2"
@@ -92,7 +92,7 @@
         android:layout_below="@+id/editServo1Neutral"
         android:layout_alignLeft="@+id/editServo1Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -105,7 +105,7 @@
         android:layout_toRightOf="@+id/editServo2Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -119,7 +119,7 @@
         android:layout_toRightOf="@+id/editServo2Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo2Right"
@@ -131,7 +131,7 @@
         android:layout_toRightOf="@+id/editServo2Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
      <TextView
         android:id="@+id/textViewServo3"
@@ -155,7 +155,7 @@
         android:layout_below="@+id/editServo2Neutral"
         android:layout_alignLeft="@+id/editServo2Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -168,7 +168,7 @@
         android:layout_toRightOf="@+id/editServo3Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -182,7 +182,7 @@
         android:layout_toRightOf="@+id/editServo3Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo3Right"
@@ -194,7 +194,7 @@
         android:layout_toRightOf="@+id/editServo3Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
      <TextView
         android:id="@+id/textViewServo4"
@@ -218,7 +218,7 @@
         android:layout_below="@+id/editServo3Neutral"
         android:layout_alignLeft="@+id/editServo3Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -231,7 +231,7 @@
         android:layout_toRightOf="@+id/editServo4Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -245,7 +245,7 @@
         android:layout_toRightOf="@+id/editServo4Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo4Right"
@@ -257,7 +257,7 @@
         android:layout_toRightOf="@+id/editServo4Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
      <TextView
         android:id="@+id/textViewServo5"
@@ -281,7 +281,7 @@
         android:layout_below="@+id/editServo4Neutral"
         android:layout_alignLeft="@+id/editServo4Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -294,7 +294,7 @@
         android:layout_toRightOf="@+id/editServo5Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -308,7 +308,7 @@
         android:layout_toRightOf="@+id/editServo5Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo5Right"
@@ -320,7 +320,7 @@
         android:layout_toRightOf="@+id/editServo5Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -345,7 +345,7 @@
         android:layout_below="@+id/editServo5Neutral"
         android:layout_alignLeft="@+id/editServo5Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -358,7 +358,7 @@
         android:layout_toRightOf="@+id/editServo6Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -372,7 +372,7 @@
         android:layout_toRightOf="@+id/editServo6Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo6Right"
@@ -384,7 +384,7 @@
         android:layout_toRightOf="@+id/editServo6Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -409,7 +409,7 @@
         android:layout_below="@+id/editServo6Neutral"
         android:layout_alignLeft="@+id/editServo6Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -422,7 +422,7 @@
         android:layout_toRightOf="@+id/editServo7Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -436,7 +436,7 @@
         android:layout_toRightOf="@+id/editServo7Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo7Right"
@@ -448,7 +448,7 @@
         android:layout_toRightOf="@+id/editServo7Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -473,7 +473,7 @@
         android:layout_below="@+id/editServo7Neutral"
         android:layout_alignLeft="@+id/editServo7Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -486,7 +486,7 @@
         android:layout_toRightOf="@+id/editServo8Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -500,7 +500,7 @@
         android:layout_toRightOf="@+id/editServo8Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo8Right"
@@ -512,7 +512,7 @@
         android:layout_toRightOf="@+id/editServo8Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -537,7 +537,7 @@
         android:layout_below="@+id/editServo8Neutral"
         android:layout_alignLeft="@+id/editServo8Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -550,7 +550,7 @@
         android:layout_toRightOf="@+id/editServo9Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -564,7 +564,7 @@
         android:layout_toRightOf="@+id/editServo9Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo9Right"
@@ -576,7 +576,7 @@
         android:layout_toRightOf="@+id/editServo9Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -601,7 +601,7 @@
         android:layout_below="@+id/editServo9Neutral"
         android:layout_alignLeft="@+id/editServo9Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -614,7 +614,7 @@
         android:layout_toRightOf="@+id/editServo10Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -628,7 +628,7 @@
         android:layout_toRightOf="@+id/editServo10Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo10Right"
@@ -640,7 +640,7 @@
         android:layout_toRightOf="@+id/editServo10Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -665,7 +665,7 @@
         android:layout_below="@+id/editServo10Neutral"
         android:layout_alignLeft="@+id/editServo10Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -678,7 +678,7 @@
         android:layout_toRightOf="@+id/editServo11Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -692,7 +692,7 @@
         android:layout_toRightOf="@+id/editServo11Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo11Right"
@@ -704,7 +704,7 @@
         android:layout_toRightOf="@+id/editServo11Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
     
     
      <TextView
@@ -729,7 +729,7 @@
         android:layout_below="@+id/editServo11Neutral"
         android:layout_alignLeft="@+id/editServo11Neutral"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
     </EditText>
 
     <EditText
@@ -742,7 +742,7 @@
         android:layout_toRightOf="@+id/editServo12Neutral"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" >
+        android:width="80dp" >
 
     </EditText>
 
@@ -756,7 +756,7 @@
         android:layout_toRightOf="@+id/editServo12Muted"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 
     <EditText
         android:id="@+id/editServo12Right"
@@ -768,5 +768,5 @@
         android:layout_toRightOf="@+id/editServo12Left"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:width="60dp" />
+        android:width="80dp" />
 </RelativeLayout>
