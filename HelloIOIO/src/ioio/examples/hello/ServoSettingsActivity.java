@@ -1,8 +1,13 @@
 package ioio.examples.hello;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.robotar.ioio.ServoSettings;
+
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,26 +15,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.TextView;
-import android.os.Build;
 
 public class ServoSettingsActivity extends ActionBarActivity {
+	private static final Logger LOG = LoggerFactory.getLogger(ServoSettingsActivity.class);
+
 	ArrayAdapter adapter;
 	MyAdapter ma;
 	Object[] list = { 1, 2 };
     String[] texts = {"aada", "bbdb", "ccc", "ddd", "eee", "fff", "eee", "hhh", "iii"};
-
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_servo_settings);
 
+		// prepare corrections.xml file on the /sdcard path 
+		// (outside from assets)
+		if (!FileUtil.correctionsExists()) {
+			FileUtil.copyCorrections(this);
+		}
+		
+		// display
 		if (savedInstanceState == null) {
+			PlaceholderFragment pf = new PlaceholderFragment();
+            pf.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, pf).commit();
 		}
 		
 		GridView gridview = (GridView) findViewById(R.id.gridView1);
@@ -57,17 +70,49 @@ public class ServoSettingsActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			return true;
+			openSettings();
+			return false;
 		}
+		setCorrResult();
+		
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void openSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+	    startActivity(intent);
+	}
+	
+	protected void setCorrResult() {
+		PlaceholderFragment pf = (PlaceholderFragment) getSupportFragmentManager().getFragments().get(0);
+		pf.updateSettings();
+		//LOG.debug("corrs to save: {}", pf.servoSettings.debugOutputCorrections());
+		
+		// save it to the file on SD
+		ServoSettings.saveCorrectionsAs(FileUtil.getCorrections(), pf.servoSettings);
+		
+		// pass it back as result of the activity
+		Intent intent = getIntent();
+		intent.putExtra("servoSettings", pf.servoSettings);
+		//LOG.debug("sending back: {}", pf.servoSettings.debugOutputCorrections());
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
+		private ServoSettings servoSettings;
+		EditText [][]servos = new EditText[12][4];
 
 		public PlaceholderFragment() {
+		}
+		@Override
+		public void setArguments(Bundle args) {
+			super.setArguments(args);
+			servoSettings = (ServoSettings) args.getSerializable("servoSettings");
+			LOG.info("got in fragment: {}", servoSettings.debugOutputCorrections());
 		}
 
 		@Override
@@ -75,7 +120,7 @@ public class ServoSettingsActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_servo_settings,
 					container, false);
-			EditText [][]servos = new EditText[12][4];
+			// load content of the corrections file
 			servos[0][0] = (EditText) rootView.findViewById(R.id.editServo1Neutral);
 			servos[0][1] = (EditText) rootView.findViewById(R.id.editServo1Muted);
 			servos[0][2] = (EditText) rootView.findViewById(R.id.editServo1Left);
@@ -135,17 +180,45 @@ public class ServoSettingsActivity extends ActionBarActivity {
 			servos[11][1] = (EditText) rootView.findViewById(R.id.editServo12Muted);
 			servos[11][2] = (EditText) rootView.findViewById(R.id.editServo12Left);
 			servos[11][3] = (EditText) rootView.findViewById(R.id.editServo12Right);
-			
-			float x = 0.1f;
+
+			// set UI edit boxes with loaded values from file
+			float[][] scorr = servoSettings.getCorrections();
 			for (int i = 0; i < 12; i++) {
 				for (int j = 0; j < 4; j++) {
-					servos[i][j].setText(Float.toString(x));
-					x += 0.1;
+					servos[i][j].setText(Float.toString(scorr[i][j]));
 				}
 			}
-			//servos[0][1].setText("0.3");
 	        
 			return rootView;
+		}
+		
+		@Override
+		public void onResume() {
+		    super.onResume();
+		    LOG.info("resume in fragment");
+		    
+		}
+		
+		@Override
+	    public void onSaveInstanceState(Bundle outState) {
+	        super.onSaveInstanceState(outState);
+		    LOG.info("save instance"); 
+	        
+		    updateSettings();
+			outState.putSerializable("servoSettings", servoSettings);
+			
+			
+	    }
+		
+		public void updateSettings() {
+			// set value from UI edit boxes to servoSettings object
+		    float[][] scorr = new float[12][4];
+			for (int i = 0; i < 12; i++) {
+				for (int j = 0; j < 4; j++) {
+					scorr[i][j] = Float.parseFloat(servos[i][j].getText().toString());
+				}
+			}
+			servoSettings.setCorrections(scorr);
 		}
 	}
 

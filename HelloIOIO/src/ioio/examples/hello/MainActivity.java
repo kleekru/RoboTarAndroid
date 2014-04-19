@@ -50,6 +50,9 @@ import cz.versarius.xsong.XMLSongLoader;
 public class MainActivity extends IOIOActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
+	private static final String KEV_BLUES_XML = "Kev Blues.xml";
+	private String lastChosenSong = KEV_BLUES_XML;
+	
 	private ToggleButton stateLedButton;
 	private TextView title;
 	private TextView currentChordView;
@@ -83,7 +86,8 @@ public class MainActivity extends IOIOActivity {
 	 */
 	private LEDSettings leds;
 
-
+	XMLSongLoader songLoader = new XMLSongLoader();
+	
 	/**
 	 * Called when the activity is first created. Here we normally initialize
 	 * our GUI.
@@ -91,56 +95,91 @@ public class MainActivity extends IOIOActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		SharedPreferences pref = getSharedPreferences("preferences", 0);
-		usePedal = pref.getBoolean("pref_next_chord_control", true);
 		
-		stateLedButton = (ToggleButton) findViewById(R.id.button);
-		currentChordView = (TextView) findViewById(R.id.currentChordView);
+		// gui items
+		setContentView(R.layout.main);
 		title = (TextView) findViewById(R.id.title);
 		songText = (TextView) findViewById(R.id.currentLineView);
 		simPedalButton = (Button) findViewById(R.id.buttonSimPedal);
+		currentChordView = (TextView) findViewById(R.id.currentChordView);
+		stateLedButton = (ToggleButton) findViewById(R.id.button);
+
+		// init song play attributes
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		SharedPreferences pref = getSharedPreferences("preferences", 0);
+		usePedal = pref.getBoolean("pref_next_chord_control", true);
 		chordIdx = -1;
 		lineIdx = 0;
+		
+		// prepare chord manager
 		chordManager = new ChordManager();
 		chordManager.initialize();
-		LOG.info("HelloIOIO", "chord manager is initialized?: {}", chordManager.isInitialized());
+		LOG.info("Chord manager is initialized?: {}", chordManager.isInitialized());
 		
 		// check external media (sdcard) TODO - full status
 		boolean storageReadable = FileUtil.isExternalStorageReadable();
 		boolean storageWritable = FileUtil.isExternalStorageWritable();
 		if (!storageReadable || !storageWritable) {
-			LOG.error("robotar", "cannot access storage - sdcard, readable:" + storageReadable + ", writable: " + storageWritable);
-			songText.setText("problem with storage, check log");
+			LOG.error("cannot access storage - sdcard, readable:" + storageReadable + ", writable: " + storageWritable);
+			title.setText("sd error");
+			songText.setText("problem with SD storage. " + 
+					"cannot access storage - sdcard, readable:" + storageReadable + ", writable: " + storageWritable);
 			return;
 		} 
-		
-		loadSong();
-		
-		guiReady = true;
-	}
 
-	private void loadSong() {
-		// get or create robotar storage dir 
-		File rtFolder = FileUtil.getRobotarStorageDir(FileUtil.ROBOTAR_FOLDER);
-		if (!rtFolder.isDirectory()) {
-			songText.setText("cannot create folder2");
+		// load servo corrections
+		servoSettings = ServoSettings.loadCorrectionsOnAndroid(FileUtil.getCorrections());
+		if (!servoSettings.isAnyCorrectionSet()) {
+			LOG.error("servo corrections not loaded! : {}", FileUtil.getCorrections().getAbsoluteFile());
+			title.setText("cfg error");
+			songText.setText("Servo corrections file was not found. You should go to Servo Settings and set servo correction values." +
+					"Otherwise you can DAMAGE your RoboTar device! After setting the values, restart this application!");
+			// guiReady is still false, so it won't be possible to play the song on RoboTar device. (no damage possible)
+			// Currently we demand restart of the app, so it will again check everything.
+			// App restart can be avoided, if we set the attribute guiReady=true after ServoSettings change.
+			// I prefer restart of the app.
 			return;
 		}
 		
-		// test load of default song
-		String songName = "Kev Blues.xml";
-		XMLSongLoader songLoader = new XMLSongLoader();
-		// look if we have something better to load
+		// mark the app as ready, RoboTar device will be able to play the songs
+		guiReady = true;
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus) {
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			usePedal = pref.getBoolean("pref_next_chord_control", true);
+			LOG.debug("value is : {}", usePedal);
+			
+			// load currently selected song
+			loadSong();
+		}
+	}
+	
+	private void loadSong() {
+		// get or create robotar storage dir 
+		File rtFolder = FileUtil.getRobotarStorageDir();
+		if (rtFolder == null) {
+			songText.setText("Problem with robotar storage directory. Is SD attached?");
+			return;
+		}
+		
+		// look if we have something 'better' to load than the default song
 		Intent intent = getIntent();
 		String chosenSongFilename = intent.getStringExtra("myfilename");
 		LOG.debug("chosen song: {}", chosenSongFilename);
 		if (chosenSongFilename != null && !chosenSongFilename.isEmpty()) {
-			songName = chosenSongFilename;
+			lastChosenSong = chosenSongFilename;
 		}
-		LOG.debug("songName: {}", songName);
-		song = songLoader.loadSong(new File(rtFolder, songName));
+		LOG.debug("songName to load: {}", lastChosenSong);
+		song = songLoader.loadSong(new File(rtFolder, lastChosenSong));
+		if (song == null) {
+			title.setText("error");
+			songText.setText("cannot find such file: " + lastChosenSong + " in folder: " + rtFolder.getAbsolutePath());
+			return;
+		}
 		title.setText(song.getFullTitle());
 		LOG.info("song title: {}", song.getFullTitle());
 		
@@ -150,10 +189,6 @@ public class MainActivity extends IOIOActivity {
 		// map chord references with real chords values, add chords to chord manager
 		fillWith(song, chordManager);
 
-		// load corrections for servo - TODO - later from file. (/assets)
-		//servoSettings = ServoSettings.loadCorrectionsOnAndroid();
-		servoSettings = new ServoSettings();
-		
 		// display current chord view
 		currentChordView.setText("---");
 
@@ -171,19 +206,13 @@ public class MainActivity extends IOIOActivity {
 	    setIntent(intent);
 	}
 	
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) {
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-			usePedal = pref.getBoolean("pref_next_chord_control", true);
-			LOG.debug("value is : {}", usePedal);
-			
-			// load song
-			loadSong();
-		}
-	}
-	
+	/**
+	 * Quick song view.
+	 * TODO better
+	 * 
+	 * @param song2
+	 * @return
+	 */
 	private CharSequence getSongText(Song song2) {
 		StringBuilder sb = new StringBuilder(30);
 		for (Part part : song2.getParts()) {
@@ -788,15 +817,15 @@ public class MainActivity extends IOIOActivity {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	    	case R.id.action_songs:
-	    		LOG.debug("songs ...");
+	    		//LOG.debug("open songs ...");
 	    		showSongs();
 	    		return true;
 	        case R.id.action_settings:
-	            LOG.debug("settings ...");
+	            //LOG.debug("open settings ...");
 	        	openSettings();
 	            return true;
 	        case R.id.servo_corrections:
-	        	LOG.debug("servo corrections");
+	        	//LOG.debug("open servo corrections");
 	        	openServoCorrections();
 	        	return true;
 	        default:
@@ -806,7 +835,9 @@ public class MainActivity extends IOIOActivity {
 
 	private void openServoCorrections() {
 		Intent intent = new Intent(this, ServoSettingsActivity.class);
-	    startActivity(intent);
+	    intent.putExtra("servoSettings", servoSettings);
+	    //LOG.debug("starting activity with: {}", servoSettings.debugOutputCorrections());
+	    startActivityForResult(intent, 1);
 	}
 	
 	private void showSongs() {
@@ -818,4 +849,16 @@ public class MainActivity extends IOIOActivity {
 		Intent intent = new Intent(this, SettingsActivity.class);
 	    startActivity(intent);
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+	        if (data.getExtras().containsKey("servoSettings")){
+	            servoSettings = (ServoSettings) data.getSerializableExtra("servoSettings");
+	            //LOG.debug("got back from activity: {}", servoSettings.debugOutputCorrections());
+	        }
+        }
+	}
+
 }

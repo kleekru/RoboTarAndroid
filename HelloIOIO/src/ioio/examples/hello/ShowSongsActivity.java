@@ -9,14 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -39,9 +36,9 @@ public class ShowSongsActivity extends ActionBarActivity {
 		}*/
 		
 		// get robotar folder
-		File rtFolder = FileUtil.getRobotarStorageDir(FileUtil.ROBOTAR_FOLDER);
-		if (!rtFolder.isDirectory()) {
-			LOG.error("cannot get robotar folder");
+		File rtFolder = FileUtil.getRobotarStorageDir();
+		if (rtFolder == null) {
+			LOG.error("Cannot get robotar storage folder. Is SD attached?");
 			return;
 		}
 		// accept only .xml files
@@ -101,11 +98,17 @@ public class ShowSongsActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			openSettings();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void openSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+	    startActivity(intent);
+	}
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

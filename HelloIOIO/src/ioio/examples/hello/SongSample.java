@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.util.Log;
 import cz.versarius.xchords.Chord;
 import cz.versarius.xchords.ChordLibrary;
 import cz.versarius.xchords.ChordManager;
