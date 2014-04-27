@@ -6,13 +6,16 @@ import ioio.lib.api.TwiMaster;
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
+import ioio.lib.util.IOIOLooperProvider;
 import ioio.lib.util.android.IOIOActivity;
+import ioio.lib.util.android.IOIOAndroidApplicationHelper;
 
 import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -46,12 +49,18 @@ import cz.versarius.xsong.XMLSongLoader;
  * on-board LED. This example shows a very simple usage of the IOIO, by using
  * the {@link IOIOActivity} class. For a more advanced use case, see the
  * HelloIOIOPower example.
+ * 
+ * It was extended from IOIOActivity, but because of needed extension from SherlockActivity,
+ * I copied IOIOActivity's internals directly into this class.
  */
-public class MainActivity extends IOIOActivity {
+public class MainActivity extends Activity implements IOIOLooperProvider{
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
 	private static final String KEV_BLUES_XML = "Kev Blues.xml";
 	private String lastChosenSong = KEV_BLUES_XML;
+
+	private final IOIOAndroidApplicationHelper helper_ = new IOIOAndroidApplicationHelper(
+			this, this);
 	
 	private ToggleButton stateLedButton;
 	private TextView title;
@@ -95,6 +104,7 @@ public class MainActivity extends IOIOActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		helper_.create();
 		
 		// gui items
 		setContentView(R.layout.main);
@@ -153,6 +163,13 @@ public class MainActivity extends IOIOActivity {
 			usePedal = pref.getBoolean("pref_next_chord_control", true);
 			LOG.debug("value is : {}", usePedal);
 			
+			// display or hide next chord button, based on the settings
+			if (usePedal) {
+				simPedalButton.setVisibility(View.GONE);
+			} else {
+				simPedalButton.setVisibility(View.VISIBLE);
+			}
+			
 			// load currently selected song
 			loadSong();
 		}
@@ -192,17 +209,14 @@ public class MainActivity extends IOIOActivity {
 		// display current chord view
 		currentChordView.setText("---");
 
-		// display or hide next chord button, based on the settings
-		if (usePedal) {
-			simPedalButton.setVisibility(View.GONE);
-		} else {
-			simPedalButton.setVisibility(View.VISIBLE);
-		}
 	}
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
 	    super.onNewIntent(intent);
+	    if ((intent.getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0) {
+			helper_.restart();
+		}
 	    setIntent(intent);
 	}
 	
@@ -702,18 +716,6 @@ public class MainActivity extends IOIOActivity {
 		}
 	}
 
-
-	/**
-	 * A method to create our IOIO thread.
-	 * 
-	 * @see ioio.lib.util.android.IOIOActivity#createIOIOLooper()
-	 *
-	 */
-	@Override
-	protected IOIOLooper createIOIOLooper() {
-		return new Looper();
-	}
-
 	/**
 	 * this should play the song through test button in gui.
 	 * the logic through Kevin's pedal is above in loop() 
@@ -859,6 +861,56 @@ public class MainActivity extends IOIOActivity {
 	            //LOG.debug("got back from activity: {}", servoSettings.debugOutputCorrections());
 	        }
         }
+	}
+	
+	// IOIOActivity internals:
+	
+
+	/**
+	 * Subclasses should call this method from their own onDestroy() if
+	 * overloaded. It takes care of connecting with the IOIO.
+	 */
+	@Override
+	protected void onDestroy() {
+		helper_.destroy();
+		super.onDestroy();
+	}
+
+	/**
+	 * Subclasses should call this method from their own onStart() if
+	 * overloaded. It takes care of connecting with the IOIO.
+	 */
+	@Override
+	protected void onStart() {
+		super.onStart();
+		helper_.start();
+	}
+
+	/**
+	 * Subclasses should call this method from their own onStop() if overloaded.
+	 * It takes care of disconnecting from the IOIO.
+	 */
+	@Override
+	protected void onStop() {
+		helper_.stop();
+		super.onStop();
+	}
+
+	/**
+	 * A method to create our IOIO thread.
+	 * 
+	 * This was originally defined in IOIOActivity and this was overriden.
+	 * Now, we don't extend IOIOActivity, therefore simply define it without @Override.
+	 * @see ioio.lib.util.android.IOIOActivity#createIOIOLooper()
+	 *
+	 */
+	protected IOIOLooper createIOIOLooper() {
+		return new Looper();
+	}
+	
+	@Override
+	public IOIOLooper createIOIOLooper(String connectionType, Object extra) {
+		return createIOIOLooper();
 	}
 
 }
