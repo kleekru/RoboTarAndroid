@@ -15,11 +15,11 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,7 +53,7 @@ import cz.versarius.xsong.XMLSongLoader;
  * It was extended from IOIOActivity, but because of needed extension from SherlockActivity,
  * I copied IOIOActivity's internals directly into this class.
  */
-public class MainActivity extends Activity implements IOIOLooperProvider{
+public class MainActivity extends ActionBarActivity implements IOIOLooperProvider{
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
 	private static final String KEV_BLUES_XML = "Kev Blues.xml";
@@ -126,6 +126,8 @@ public class MainActivity extends Activity implements IOIOLooperProvider{
 		chordManager.initialize();
 		LOG.info("Chord manager is initialized?: {}", chordManager.isInitialized());
 		
+		simPedalButton.setEnabled(false);
+		
 		// check external media (sdcard) TODO - full status
 		boolean storageReadable = FileUtil.isExternalStorageReadable();
 		boolean storageWritable = FileUtil.isExternalStorageWritable();
@@ -187,12 +189,13 @@ public class MainActivity extends Activity implements IOIOLooperProvider{
 		Intent intent = getIntent();
 		String chosenSongFilename = intent.getStringExtra("myfilename");
 		LOG.debug("chosen song: {}", chosenSongFilename);
-		if (chosenSongFilename != null && !chosenSongFilename.isEmpty()) {
+		if (chosenSongFilename != null && chosenSongFilename.length() != 0) {
 			lastChosenSong = chosenSongFilename;
 		}
 		LOG.debug("songName to load: {}", lastChosenSong);
 		song = songLoader.loadSong(new File(rtFolder, lastChosenSong));
 		if (song == null) {
+			simPedalButton.setEnabled(false);
 			title.setText("error");
 			songText.setText("cannot find such file: " + lastChosenSong + " in folder: " + rtFolder.getAbsolutePath());
 			return;
@@ -209,6 +212,7 @@ public class MainActivity extends Activity implements IOIOLooperProvider{
 		// display current chord view
 		currentChordView.setText("---");
 
+		simPedalButton.setEnabled(true);
 	}
 	
 	@Override

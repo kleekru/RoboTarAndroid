@@ -71,7 +71,7 @@ public class ServoSettingsActivity extends ActionBarActivity {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			openSettings();
-			return false;
+			return true;
 		}
 		setCorrResult();
 		

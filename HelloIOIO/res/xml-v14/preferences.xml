@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:key="pref_next_chord_control"
+        android:title="@string/next_chord_control"
+        android:summaryOn="@string/next_chord_control_summ_on"
+        android:summaryOff="@string/next_chord_control_summ_off"
+        android:switchTextOn="@string/next_chord_control_text_on"
+        android:switchTextOff="@string/next_chord_control_text_off"
+        android:defaultValue="true" />
+   
+</PreferenceScreen>
