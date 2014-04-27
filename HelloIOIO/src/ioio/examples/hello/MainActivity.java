@@ -148,7 +148,7 @@ public class MainActivity extends IOIOActivity {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) {
+		if (hasFocus && guiReady) {
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			usePedal = pref.getBoolean("pref_next_chord_control", true);
 			LOG.debug("value is : {}", usePedal);

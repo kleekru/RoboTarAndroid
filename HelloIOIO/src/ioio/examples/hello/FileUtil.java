@@ -28,6 +28,7 @@ public class FileUtil {
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			return true;
 		}
+		LOG.error("external storage state: {}", state);
 		return false;
 	}
 
@@ -38,6 +39,7 @@ public class FileUtil {
 				|| Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 			return true;
 		}
+		LOG.error("external storage state: {}", state);
 		return false;
 	}
 
@@ -46,7 +48,7 @@ public class FileUtil {
 		// this required api level 19, therefore we put our robotarfolder only
 		// at the root of external storage
 		// Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS
-		
+		LOG.debug("external storage directory: {}", Environment.getExternalStorageDirectory().getAbsolutePath());
 		File file = new File(Environment.getExternalStorageDirectory(), path);
 		file.mkdirs();
 		if (!file.isDirectory()) {
