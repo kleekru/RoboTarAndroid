@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
+import android.support.v4.preference.PreferenceFragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.preference.PreferenceFragment;
 
 public class SettingsActivity extends ActionBarActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsActivity.class);
@@ -28,9 +28,11 @@ public class SettingsActivity extends ActionBarActivity {
 		}*/
 		
 		// Display the fragment as the main content.
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
+		/// apis below api level 11 don't have PreferenceFragment
+		//addPreferencesFromResource(R.xml.preferences);
 	}
 
 	@Override
@@ -70,6 +72,7 @@ public class SettingsActivity extends ActionBarActivity {
 		}
 	}
 
+	/* api level 11 */
 	public static class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 		@Override
 	    public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +102,7 @@ public class SettingsActivity extends ActionBarActivity {
 			LOG.info("fragment use: {}", usePedal);
 		}
 	}
-
+	
 	
 	
 }

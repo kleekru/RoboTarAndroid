@@ -144,13 +144,13 @@ public class MainActivity extends ActionBarActivity implements IOIOLooperProvide
 		if (!servoSettings.isAnyCorrectionSet()) {
 			LOG.error("servo corrections not loaded! : {}", FileUtil.getCorrections().getAbsoluteFile());
 			title.setText("cfg error");
-			songText.setText("Servo corrections file was not found. You should go to Servo Settings and set servo correction values." +
-					"Otherwise you can DAMAGE your RoboTar device! After setting the values, restart this application!");
+			songText.setText("Servo corrections values are not set! (all == 0.0) You should go to Servo Settings and set servo correction values." +
+					"Otherwise you can DAMAGE your RoboTar device! After setting the values, please restart this application!");
 			// guiReady is still false, so it won't be possible to play the song on RoboTar device. (no damage possible)
 			// Currently we demand restart of the app, so it will again check everything.
 			// App restart can be avoided, if we set the attribute guiReady=true after ServoSettings change.
 			// I prefer restart of the app.
-			return;
+			return; 
 		}
 		
 		// mark the app as ready, RoboTar device will be able to play the songs

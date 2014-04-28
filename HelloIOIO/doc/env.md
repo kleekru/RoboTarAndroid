@@ -9,10 +9,16 @@ which leads to http://developer.android.com/tools/support-library/setup.html
 Create emulator device:
 Window - Android Virtual Device Manager, create new AVD.
 properties: 
-Google API 4.4.2, api level 19
+Google API 4.4.2, api level 19 (also tested 11 and 8)
 CPU ARM
 Storage SD Card 100MiB
 Use Host GPU - may be quicker
+
+If you need to run it below Android 3.0 (api level 11), you need to download this project:
+https://github.com/kolavar/android-support-v4-preferencefragment
+(it will complain about android-4, set it to android-8 (probably, this is the lowest api level for robotar (ioio)))
+then remove libs/android-support-v4.jar and put there the same jar file from appcompat_v7 project (also in libs). otherwise you'll get error, that these two jars don't match.
+(i'm not sure, where i got it, but for the record, it's on my computer in ws/robotar/appcompat_v7, i can package it and send :) )
 
 Then Project Run as Android application.
 It takes few minutes to start. 
